@@ -1,0 +1,17 @@
+<div flex-container="row" flex-align="center" >
+
+<div flex-item="6">
+ <div class="card">
+ <div class="p+">
+ <strong class="fs-headline display-block">About</strong>
+    <span class="fs-subhead tc-black-2 display-block">{{$rootScope.currentUser.username}}</span>
+   <div class="paragraph fs-body-1 mt+">   
+   {{$rootscope.currentUser.roles[0]}}
+   <div ng-if="currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
+
+</div>
+</div>
+</div>
+</div>
+
+</div>

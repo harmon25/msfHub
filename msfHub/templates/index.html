@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app="msfHub">
+<div ng-controller="LayoutController">
+<head>
+<meta charset="utf-8" >
+<title>msfHub</title>
+<link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
+<link rel="stylesheet" href="/static/css/msfHub.css">
+<link rel="stylesheet" href="/static/bower_components/lumx/dist/lumx.css">
+<link rel="stylesheet" href="/static/bower_components/mdi/materialdesignicons.css">
+</head>
+<body>
+<md-toolbar layout="row">
+      <h1>msfHub </h1>
+</md-toolbar>
+
+<div ng-if="currentUser.token">
+<div class="card">
+    <div class="toolbar">
+        <div class="toolbar__left mr+++">
+  <lx-dropdown>
+    <button class="btn btn--l btn--black btn--icon" lx-ripple  lx-dropdown-toggle>
+                <i class="mdi mdi-menu"></i>
+            </button>
+
+    <lx-dropdown-menu>
+        <ul>
+            <li ui-sref-active="home" class="active"><a ui-sref="home" class="dropdown-link">Home</a></li>
+            <li ui-sref-active="about" class="active"><a ui-sref="about" class="dropdown-link">About</a></li>
+            <li ui-sref-active="reports" class="active"><a ui-sref="reports" class="dropdown-link">Reports</a></li>
+            <li class="dropdown-divider"></li>
+            <li><span class="dropdown-link dropdown-link--is-header">Header</span></li>
+            <li><a ng-click="opendDialog('loginDialog')" class="dropdown-link">Open Dialog</a></li>
+        </ul>
+    </lx-dropdown-menu>
+</lx-dropdown>
+
+        </div>
+         <span class="toolbar__label fs-title"></span>
+        <div class="toolbar__right">
+            <lx-search-filter closed theme="light"></lx-search-filter>
+
+            <lx-dropdown position="right" from-top>
+                <button class="btn btn--l btn--black btn--icon" lx-ripple lx-dropdown-toggle>
+                    <i class="mdi mdi-dots-vertical"></i>
+                </button>
+
+                <lx-dropdown-menu>
+                    <ul>
+                        <li><a class="dropdown-link">Add User</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a href="#/login" class="dropdown-link">Logout</a></li>
+                    </ul>
+                </lx-dropdown-menu>
+            </lx-dropdown>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<lx-dialog class="dialog dialog--l" id="loginDialog">
+    <div class="dialog__header">
+        <div class="toolbar bgc-red-300 pl++">
+            <span class="toolbar__label tc-white fs-title">
+                Please Login
+            </span>
+
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+         <div class="p++">
+        
+        </div>       
+    </div>
+
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--green btn--raised"  ng-disabled="form.$invalid || dataLoading" lx-ripple>Login</button>
+         <md-progress-circular ng-if="dataLoading" class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
+    </div>
+
+</lx-dialog>
+
+</div>
+
+
+
+<div layout="row" flex> 
+        <div layout="column" flex id="content">
+            <md-content layout="column" flex class="md-padding">
+                 <div> {{$state.current.data}}</div>
+              <div ui-view></div>
+            </md-content>
+            <md-divider inset></md-divider>
+            
+        </div>
+    </div>
+
+<script src="/static/bower_components/jquery/dist/jquery.js"></script>
+<script src="/static/bower_components/velocity/velocity.js"></script>
+<script src="/static/bower_components/moment/min/moment-with-locales.js"></script>
+
+<script src="/static/bower_components/angular/angular.js"> </script>
+<script src="/static/bower_components/lumx/dist/lumx.js"></script>
+<script src="/static/bower_components/angular-ui-router/release/angular-ui-router.min.js"> </script>
+<script src="/static/bower_components/angular-jwt/dist/angular-jwt.min.js"> </script>
+<script src="/static/bower_components/angular-cookies/angular-cookies.min.js"> </script>
+<script src="/static/bower_components/angular-resource/angular-resource.min.js"> </script>
+<script src="/static/bower_components/angular-animate/angular-animate.min.js"> </script>
+<script src="/static/bower_components/angular-aria/angular-aria.min.js"> </script>
+<script src="/static/bower_components/angular-material/angular-material.js"> </script>
+
+
+
+
+
+
+<script src="/static/scripts/app.js"></script>
+
+<script src="/static/modules/authentication/services.js"></script>
+<script src="/static/modules/authentication/controllers.js"></script>
+<script src="/static/modules/main/services.js"></script>
+<script src="/static/modules/main/controllers.js"></script>
+
+</body>
+</div>
+</html>
