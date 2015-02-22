@@ -35,11 +35,28 @@ angular.module('Authentication')
     return !!$rootScope.currentUser.token;
   };
  
-  authService.isAuthorized = function (authorizedRoles) {
+  authService.isAuthorized = function (authorizedRoles, userRoles) {
     if (!angular.isArray(authorizedRoles)) {
       authorizedRoles = [authorizedRoles];
-    }
-    return (authorizedRoles.indexOf(Session.userRoles) !== -1);
+    };
+    if (!angular.isArray(userRoles)) {
+      userRoles = [userRoles];
+    };
+/*
+
+angular.forEach(userRoles, function(val, key) {
+        var allowed = authorizedRoles.indexOf(val) >= 0;
+        console.log(allowed);
+*/
+
+      for (var i = userRoles.length - 1; i >= 0; i--) {
+        var allowed = authorizedRoles.indexOf(userRoles[i]) >= 0;
+        console.log(userRoles[i]);
+        console.log(allowed);
+         }
+
+
+    return allowed;
   };
  
   return authService;
@@ -72,7 +89,7 @@ angular.module('Authentication')
   };
   this.destroy = function () {
     $rootScope.currentUser.name = '';
-    $rootScope.currentUser.roles  = 'guest';
+    $rootScope.currentUser.roles  = ["guest"];
     $rootScope.currentUser.token = '';
     $cookieStore.remove('currentUser');
   };

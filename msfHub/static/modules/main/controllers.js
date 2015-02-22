@@ -18,37 +18,26 @@ angular.module('Main')
     
     $rootScope.$on('$stateChangeStart', function (event, next) {
     var authorizedRoles = next.data.authorizedRoles;
-    if (!AuthService.isAuthorized(authorizedRoles)) {
-      //event.preventDefault();
+    console.log(authorizedRoles);
+    var user_roles = $rootScope.currentUser.roles
+    console.log(user_roles);
+    console.log(AuthService.isAuthorized(authorizedRoles, user_roles))
+    if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
+      console.log("prevent state change");
+      event.preventDefault();
       if (AuthService.isAuthenticated()) {
         // user is not allowed
+        console.log(AUTH_EVENTS.notAuthorized);
         $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       } else {
         // user is not logged in
+        console.log(AUTH_EVENTS.notAuthenticated);
         $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
       }
     }
   });
 
-/*
-    $rootScope.$on('$stateChangeStart', 
-    function(event, toState, toParams, fromState, fromParams){ 
- 
-    if(!$rootScope.currentUser.token){
-        //event.preventDefault();
-        console.log("you have no token");
-        console.log("Go to login")
 
-     } else {
-        // not sure what else...
-        console.log("You can stay here..")
-    }
-
-
-    }
-    
-     )
-*/	
     }])
 
 .controller('HomeController',

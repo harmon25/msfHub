@@ -27,10 +27,10 @@ angular.module('msfHub', [
   notAuthorized: 'auth-not-authorized'
 })
 
-.constant('USER_ROLES', {
-  guest: 'guest',
-  admin: 'admin',
-  user: 'user'
+.constant("USER_ROLES", {
+  guest: "guest",
+  admin: "admin",
+  user: "user"
 })
 
 
@@ -39,9 +39,9 @@ angular.module('msfHub', [
 
     $rootScope.state = $state;
 
-    $rootScope.currentUser = $cookieStore.get('currentUser') || { name: 'anon',
-                                                                  roles: 'guest',
-                                                                  token: ''
+    $rootScope.currentUser = $cookieStore.get('currentUser') || { name: "anon",
+                                                                  roles: ["guest"],
+                                                                  token: ""
                                                                   };
 
     }])
