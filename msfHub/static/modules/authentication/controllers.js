@@ -3,8 +3,8 @@
 angular.module('Authentication')
 
 .controller('LoginController',
-    ['$scope', '$rootScope', 'LxNotificationService', 'AUTH_EVENTS', 'LxDialogService','AuthService','Session',
-    function ($scope, $rootScope, LxNotificationService, AUTH_EVENTS, LxDialogService, AuthService, Session) {
+    ['$scope', 'LxNotificationService', 'LxDialogService','Session','AuthService',
+    function ($scope, LxNotificationService, LxDialogService, Session, AuthService) {
     Session.destroy()
     $scope.credentials = {
                     username: '',

@@ -9,6 +9,7 @@ angular.module('msfHub', [
     'Main',              // msfHub Main Module
     'ui.router',         // ui-router
     'ngCookies',         // angular-cookies - may replace with local storage
+    'LocalStorageModule', // local-storage..may remove cookies completly 
     'angular-jwt',       // for client side JWT
     'ngResource',        // maybe to get resources..
     'ngMaterial',        // for material design - may use just Lumx
@@ -34,25 +35,46 @@ angular.module('msfHub', [
 })
 
 
-.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','$cookieStore','$http',
-    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, $cookieStore, $http) {
+.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken','localStorageService','$http',
+    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken,localStorageService, $http) {
 
     $rootScope.state = $state;
+    console.log(Session.getToken())
+    if (!Session.getToken()) {
+      $rootScope.currentUser = {name: "anon", roles: ["guest"]}
+    } else {
+      $rootScope.currentUser = {};
+      var currentToken = localStorageService.get('token');
+      $rootScope.currentUser = decodeToken.decode(currentToken)
+      $http.defaults.headers.common['Authorization'] = 'Bearer ' + currentToken; // jshint ignore:line
+    }
 
-    $rootScope.currentUser = $cookieStore.get('currentUser') || { name: "anon",
-                                                                  roles: ["guest"],
-                                                                  token: ""
-                                                                  };
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+    var authorizedRoles = next.data.authorizedRoles;
+    console.log(authorizedRoles);
+    var user_roles = $rootScope.currentUser.roles
+    console.log(user_roles);
+    console.log(AuthService.isAuthorized(authorizedRoles, user_roles))
+    if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
+      console.log("prevent state change");
+      event.preventDefault();
+      if (AuthService.isAuthenticated()) {
+        // user is not allowed
+        console.log(AUTH_EVENTS.notAuthorized);
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+      } else {
+        // user is not logged in
+        console.log(AUTH_EVENTS.notAuthenticated);
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+      }
+    }
+  });
+
+
 
     }])
 
 .config(['$stateProvider','$urlRouterProvider','USER_ROLES','jwtInterceptorProvider','$httpProvider', function ($stateProvider,$urlRouterProvider, USER_ROLES, jwtInterceptorProvider, $httpProvider) {
-
-    jwtInterceptorProvider.tokenGetter = ['Session', function(Session){
-    return Session.getToken();
-    }];
-
-    $httpProvider.interceptors.push('jwtInterceptor');
 
     $urlRouterProvider.otherwise("/");
     
@@ -62,32 +84,37 @@ angular.module('msfHub', [
             url:'/',
             controller: 'LoginController',
             templateUrl: '/views/login',
-            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.guest]}
+            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.guest],
+                    title: 'msfHub &middot Login' }
         })
         .state('home', {
             url:'/home',
             controller: 'HomeController',
-            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]},
+            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
+                    title: 'msfHub &middot Home'},
             templateUrl: '/views/home'
          })
         .state('about', {
             url:'/about',
             controller: 'HomeController',
-            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]},
+            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
+                    title: 'msfHub &middot About'},
             templateUrl: '/views/about'
         })
 
         .state('reports', {
             url:'/reports',
             controller: 'ReportsController',
-            data: {authorizedRoles: [USER_ROLES.admin]},
+            data: {authorizedRoles: [USER_ROLES.admin],
+                title: 'msfHub &middot Reports'},
             templateUrl: '/views/reports'
         })
         
         .state('private', {
             url:'/private',
             controller: 'HomeController',
-            data: {authorizedRoles: [USER_ROLES.admin]},
+            data: {authorizedRoles: [USER_ROLES.admin],
+                title: 'msfHub &middot Private'},
             templateUrl: '/views/private'
         })
         
