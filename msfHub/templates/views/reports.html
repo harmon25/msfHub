@@ -1,16 +1,40 @@
-<div flex-container="row" flex-align="center" >
+<div flex-container="row" flex-align="center" flex-gutter="24" >
 
-<div flex-item="6">
+<div flex-item="5">
  <div class="card">
  <div class="p+">
- <strong class="fs-headline display-block">Reports</strong>
-    <span class="fs-subhead tc-black-2 display-block"></span>
-   <div class="paragraph fs-body-1 mt+">   
-   <div ng-if="globals.currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
+ <strong class="fs-headline display-block">Reports - Input </strong>
 
+   <div class="paragraph fs-body-1 mt+">   
+	<md-input-container >
+        <label>Report</label>
+        <textarea style="min-height: 150px;" ng-model="markdownInput" columns="1" ></textarea>
+      
+      </md-input-container>
+   </div>
+  
 </div>
 </div>
 </div>
+
+
+
+<div flex-item="5">
+ <div class="card">
+ <div class="p+">
+ <strong class="fs-headline display-block">Markdown</strong>
+ <div style="min-height: 195px;" class="paragraph fs-body-1 mt+">  
+  <div style="max-height: 300px;" lx-scrollbar> 
+	<div btf-markdown="markdownInput">   </div>
+  </div>
+  </div>
 </div>
+<div class="card__actions" >
+   <button class="btn btn--m btn--black btn--flat" flex lx-ripple>Share</button>
+   </div>
+</div>
+</div>
+
+
 
 </div>

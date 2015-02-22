@@ -15,20 +15,20 @@ def drop_db():
 def main():
 	parser = argparse.ArgumentParser(description='Manage this Flask application.')
 	parser.add_argument('command', help='the name of the command you want to run')
-	parser.add_argument('--seedfile', help='the file with data for seeding the database')
+	parser.add_argument('--file', help='the file with data for seeding the database')
 	args = parser.parse_args()
 
-	if args.command == 'create_db':
+	if args.command == 'create':
 		create_db()
 		print "DB created!"
 
 		
-	elif args.command == 'delete_db':
+	elif args.command == 'delete':
 		drop_db()
 		print "DB deleted!"
 
-	elif args.command == 'seed_db' and args.seedfile:
-		with open(args.seedfile, 'r') as f:
+	elif args.command == 'seed' and args.file:
+		with open(args.file, 'r') as f:
 			seed_data = json.loads(f.read())
 
 		for role in seed_data.get("roles"):

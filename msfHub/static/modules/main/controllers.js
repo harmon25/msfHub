@@ -22,15 +22,15 @@ angular.module('Main')
     }])
 
 .controller('HomeController',
-    ['$scope','$rootScope', '$cookies',
-    function ($scope, $rootScope, $cookies) {
+    ['$scope','$rootScope', 
+    function ($scope, $rootScope) {
   	
 
     }])
 
 
 .controller('ReportsController',
-    ['$scope','$rootScope', '$cookies',
-    function ($scope, $rootScope, $cookies) {
+    ['$scope','$rootScope', 
+    function ($scope, $rootScope) {
 
     }]);

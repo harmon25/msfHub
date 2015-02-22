@@ -45,14 +45,15 @@ angular.module('Authentication')
       userRoles = [userRoles];
     };
 
+      var Authorized = false;
       for (var i = userRoles.length - 1; i >= 0; i--) {
-        var allowed = authorizedRoles.indexOf(userRoles[i]) >= 0;
-        console.log(userRoles[i]);
-        console.log(allowed);
-         }
+          var  r = userRoles[i]
+        if (authorizedRoles.indexOf(r) >= 0) {
+          Authorized = true;
+          }; 
+        };
 
-
-    return allowed;
+    return Authorized;
   };
  
   return authService;

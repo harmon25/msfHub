@@ -90,13 +90,12 @@
 
 
 
-<div layout="row" flex> 
+<md-content flex class="md-padding">
+     <div ui-view></div>
+</md-content>
 
-            <md-content layout="column" flex class="md-padding">
-              <div ui-view></div>
-            </md-content>
-            <md-divider inset></md-divider>
-</div>
+<md-divider inset></md-divider>
+
 
 <script src="/static/bower_components/jquery/dist/jquery.js"></script>
 <script src="/static/bower_components/velocity/velocity.js"></script>

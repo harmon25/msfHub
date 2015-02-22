@@ -8,7 +8,6 @@ angular.module('msfHub', [
     'Authentication',    // msfHub Auth module
     'Main',              // msfHub Main Module
     'ui.router',         // ui-router
-    'ngCookies',         // angular-cookies - may replace with local storage
     'LocalStorageModule', // local-storage..may remove cookies completly 
     'angular-jwt',       // for client side JWT
     'ngResource',        // maybe to get resources..
@@ -35,11 +34,11 @@ angular.module('msfHub', [
 })
 
 
-.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken','localStorageService','$http',
-    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken,localStorageService, $http) {
+.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http',
+    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http) {
 
     $rootScope.state = $state;
-    console.log(Session.getToken())
+
     if (!Session.getToken()) {
       $rootScope.currentUser = {name: "anon", roles: ["guest"]}
     } else {
@@ -66,6 +65,7 @@ angular.module('msfHub', [
         // user is not logged in
         console.log(AUTH_EVENTS.notAuthenticated);
         $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+        $state.go('login');
       }
     }
   });
@@ -74,7 +74,7 @@ angular.module('msfHub', [
 
     }])
 
-.config(['$stateProvider','$urlRouterProvider','USER_ROLES','jwtInterceptorProvider','$httpProvider', function ($stateProvider,$urlRouterProvider, USER_ROLES, jwtInterceptorProvider, $httpProvider) {
+.config(['$stateProvider','$urlRouterProvider','USER_ROLES','jwtInterceptorProvider','$httpProvider', function ($stateProvider, $urlRouterProvider, USER_ROLES, $httpProvider) {
 
     $urlRouterProvider.otherwise("/");
     
