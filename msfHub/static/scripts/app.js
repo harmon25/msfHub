@@ -85,37 +85,54 @@ angular.module('msfHub', [
             controller: 'LoginController',
             templateUrl: '/views/login',
             data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.guest],
-                    title: 'msfHub &middot Login' }
+                    title: 'msfHub · Login' }
         })
         .state('home', {
             url:'/home',
             controller: 'HomeController',
             data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
-                    title: 'msfHub &middot Home'},
+                    title: 'msfHub · Home'},
             templateUrl: '/views/home'
          })
         .state('about', {
             url:'/about',
             controller: 'HomeController',
             data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
-                    title: 'msfHub &middot About'},
+                    title: 'msfHub · About'},
             templateUrl: '/views/about'
         })
 
         .state('reports', {
             url:'/reports',
             controller: 'ReportsController',
-            data: {authorizedRoles: [USER_ROLES.admin],
-                title: 'msfHub &middot Reports'},
+            data: {authorizedRoles: [USER_ROLES.user],
+                title: 'msfHub · Reports'},
             templateUrl: '/views/reports'
         })
         
-        .state('private', {
-            url:'/private',
-            controller: 'HomeController',
+        .state('admin', {
+            abstract: true,
+            url:'/admin',
+            controller: 'AdminController',
             data: {authorizedRoles: [USER_ROLES.admin],
-                title: 'msfHub &middot Private'},
-            templateUrl: '/views/private'
+                title: 'msfHub · Admin'},
+            templateUrl: '/views/admin'
+        })
+
+        .state('admin.editusers', {
+            url:'/editusers',
+            controller: 'AdminController',
+            data: {authorizedRoles: [USER_ROLES.admin],
+                title: 'msfHub · Edit Users'},
+            templateUrl: '/views/admin/users'
+        })
+         
+         .state('profile', {
+            url:'/profile',
+            controller: 'ProfileController',
+            data: {authorizedRoles: [USER_ROLES.user],
+                title: 'msfHub · Profile'},
+            templateUrl: '/views/profile'
         })
         
 

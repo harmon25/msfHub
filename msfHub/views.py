@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask import render_template, g, session, request, flash, redirect, url_for, Response
-from flask import send_file, make_response, abort, jsonify
+import os
+from flask import send_file, make_response, abort, jsonify, send_from_directory
 from msfHub import app, jwt
 from msfHub.models import db, User
-from flask_jwt import jwt_required
+from flask_jwt import jwt_required, current_user
 
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('msfHub/static/img/favicon.ico')
 
 @app.route('/',methods=['GET'])
 def index():
@@ -18,16 +23,34 @@ def view_login():
 @app.route('/views/home',methods=['GET'])
 @jwt_required()
 def view_home():
-    return make_response(open('msfHub/templates/views/home.html').read())
+	print current_user
+	return make_response(open('msfHub/templates/views/home.html').read())
 
 @app.route('/views/reports',methods=['GET'])
 @jwt_required()
 def view_reports():
-    return make_response(open('msfHub/templates/views/reports.html').read())
+	print current_user
+	return make_response(open('msfHub/templates/views/reports.html').read())
 
 @app.route('/views/about',methods=['GET'])
+@jwt_required()
 def view_about():
     return make_response(open('msfHub/templates/views/about.html').read())
+
+@app.route('/views/admin',methods=['GET'])
+@jwt_required()
+def view_admin():
+    return make_response(open('msfHub/templates/views/admin.html').read())
+
+@app.route('/views/admin/users',methods=['GET'])
+@jwt_required()
+def view_admin_users():
+    return make_response(open('msfHub/templates/views/admin.users.html').read())
+
+@app.route('/views/profile',methods=['GET'])
+@jwt_required()
+def view_profile():
+    return make_response(open('msfHub/templates/views/profile.html').read())
 
 
 @app.errorhandler(401)
@@ -44,22 +67,9 @@ def row2dict(row):
         d[column.name] = str(getattr(row, column.name))
     return d
 
-@app.route('/login',methods=['POST'])
-def login():
-	username = request.json.get("username")
-	password = request.json.get("password")
+
 	# try to authenticate with username/password
-	user = User.query.filter_by(username=username).first()
-	if not user or not user.verify_password(password):
-		abort(401)
-		#raise InvalidAPIUsage(message, status_code=401) 
-	else:
-		roles = []
-		for role in user.roles:
-			roles.append(str(role))
-		g.user = username
-		message = {"success": "true", "username": user.username, "roles": roles}
-		flash('You were logged in')
-		return jsonify(message)
+	#user = User.query.filter_by(username=username).first()
+	
 
 		

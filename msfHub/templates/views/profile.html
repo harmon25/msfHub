@@ -3,10 +3,10 @@
 <div flex-item="6">
  <div class="card">
  <div class="p+">
- <strong class="fs-headline display-block">About</strong>
-    <span class="fs-subhead tc-black-2 display-block">{{currentUser.username}}</span>
+ <strong class="fs-headline display-block">Profile</strong>
+    <span class="fs-subhead tc-black-2 display-block">{{currentUser.name}}</span>
    <div class="paragraph fs-body-1 mt+">   
-   {{currentUser.roles[0]}}
+   {{currentUser.roles}}
    <div ng-if="currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
 
 </div>
