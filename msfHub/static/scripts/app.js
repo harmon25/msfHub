@@ -5,14 +5,17 @@ angular.module('Authentication', []);
 angular.module('Main', []);
 
 angular.module('msfHub', [
-    'Authentication',
-    'Main',
-    'ui.router',
-    'ngCookies',
-    'angular-jwt',
-    'ngResource',
-    'ngMaterial',
-    'lumx'
+    'Authentication',    // msfHub Auth module
+    'Main',              // msfHub Main Module
+    'ui.router',         // ui-router
+    'ngCookies',         // angular-cookies - may replace with local storage
+    'angular-jwt',       // for client side JWT
+    'ngResource',        // maybe to get resources..
+    'ngMaterial',        // for material design - may use just Lumx
+    'lumx',              // for material design
+    'ngSanitize',        // for markdown
+    'btford.markdown'    // markdown directive
+
 ])
 
 .constant('AUTH_EVENTS', {
