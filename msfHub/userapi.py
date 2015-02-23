@@ -9,6 +9,7 @@ from msfHub import app, jwt
 from msfHub.models import db, User
 from datetime import datetime
 from flask_jwt import jwt_required, current_user
+from flask.ext.restful import Resource, fields, marshal_with
 
 @jwt.authentication_handler
 def authenticate(username, password):
@@ -54,14 +55,12 @@ def row2dict(row):
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def whoami():
-	if current_user:
-		user = current_user
+	if current_user():
+		user = current_user()
 		print user
 		return jsonify({"username": user.username, "roles":str(user.roles)})
 	else:
 		 abort(400)
-
-
 
 @app.route('/api/users', methods=['POST'])
 def new_user():
@@ -78,6 +77,19 @@ def new_user():
 	db.session.commit()
 	return (jsonify({'username': user.username}), 201,
     	{'Location': url_for('get_user', id=user.id, _external=True)})
+
+
+fields = {
+    'id': fields.String(attribute='private_name'),    
+    'name': fields.String(attribute='private_name'),
+    'roles': fields.String,
+}
+
+
+@app.route('/api/users', methods=['GET'])
+def getUsers(): 
+   users = User.query.(User.id, User.username, User._roles)
+   return (jsonify(inspect(users).attributes.items()))
 
 
 @app.route('/api/users/<int:id>')

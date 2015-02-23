@@ -3,17 +3,42 @@
 angular.module('Main')
 
 .service('openLogin',
-['$scope','LxDialogService', function ($scope, LxDialogService){
+['$scope','LxDialogService', function (LxDialogService){
+var service = {};
 
-$scope.openDialog = function(dialogId)
+service.openDialog = function(dialogId)
     {
     LxDialogService.open(dialogId);
     };
 
- $scope.closeDialog = function()
+ service.closeDialog = function(dialogId)
     {
     LxDialogService.close(dialogId);
     };
 
+return service;
+
+}])
+
+
+
+.factory('userListFactory',
+['$http', function userListFactory($http){
+var factory = {};
+
+factory.getUsers = function(){
+
+var req = {
+        url: '/auth',
+        skipAuthorization: true,
+        method: 'POST',
+        data: credentials
+        };
+
+	return {}
+}
+   
+
+return factory;
 
 }])

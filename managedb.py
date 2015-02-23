@@ -4,7 +4,7 @@ import os
 import argparse
 import json
 
-from msfHub.models import db, User, Role, Ability
+from msfHub.models import db, User, Role
 
 def create_db():
 	db.create_all()
@@ -44,18 +44,10 @@ def main():
 			password=user.get("password")
 			roles = user.get("roles")
 			print username,password, roles
-			db_user = User(username=username,password=password,roles=roles, default_role=None)
+			db_user = User(username=username,password=password)
 			db.session.add(db_user)
 			db.session.commit()
 
-		role = Role.query.filter_by(name='admin').first()
-		abilities = ['create_users', 'set_roles', 'set_abilities']
-		for ability in abilities:
-			new_ability = Ability(ability)
-			db.session.add(new_ability)
-			db.session.commit()
-		role.add_abilities(*abilities)
-		db.session.add(role)
 		db.session.commit()
 		
 		db.session.close()
