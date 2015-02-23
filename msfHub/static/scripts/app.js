@@ -105,7 +105,7 @@ angular.module('msfHub', [
         .state('reports', {
             url:'/reports',
             controller: 'ReportsController',
-            data: {authorizedRoles: [USER_ROLES.user],
+            data: {authorizedRoles: [USER_ROLES.admin],
                 title: 'msfHub · Reports'},
             templateUrl: '/views/reports'
         })

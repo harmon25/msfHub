@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import os
 import argparse
 import json
@@ -21,7 +20,6 @@ def main():
 	if args.command == 'create':
 		create_db()
 		print "DB created!"
-
 		
 	elif args.command == 'delete':
 		drop_db()
@@ -34,19 +32,21 @@ def main():
 		for role in seed_data.get("roles"):
 			name = role.get("name")
 			desc = role.get("desc")
-			db_role = Role(name=name)
+			db_role = Role(name=name, description=desc)
 			db.session.add(db_role)
-			db_role.description = desc
 			db.session.commit()
 
 		for user in seed_data.get("users"):
 			username=user.get("username")
 			password=user.get("password")
-			roles = user.get("roles")
-			print username,password, roles
-			db_user = User(username=username,password=password)
+			db_user = User(username=username, password=password)
 			db.session.add(db_user)
 			db.session.commit()
+			roles = user.get("roles")
+			for role in roles:
+				user = User.query.filter_by(username=username).first()
+				roll_to_add = Role.query.filter_by(name=role).first()
+				user.roles.append(roll_to_add)
 
 		db.session.commit()
 		

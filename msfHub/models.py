@@ -7,7 +7,6 @@
 from flask import g
 from flask.ext.sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
-import flask.ext.restless
 
 from msfHub import app
 
@@ -43,12 +42,6 @@ class User(db.Model):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.password_hash = pwd_context.encrypt(kwargs.get('password'))
-         
-    def add_roles(self, *roles):
-        self.roles.extend([role for role in roles if role not in self.roles])
-
-    def remove_roles(self, *roles):
-        self.roles = [role for role in self.roles if role not in roles]
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
