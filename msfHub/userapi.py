@@ -41,7 +41,7 @@ def error_handler(error):
     message = {"success": False, "message": 'Authentication Failed'}
     resp = jsonify(message)
     resp.status_code=401
-    resp.headers['WWW-Authenticate'] = 'BasicCustom realm="metaflask"'
+    resp.headers['WWW-Authenticate'] = 'BasicCustom realm="msfHub"'
     return resp
 
 def row2dict(row):

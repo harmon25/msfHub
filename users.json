@@ -6,7 +6,7 @@
             "roles": ["admin","user"]
         },
         {
-            "username": "guest",
+            "username": "harmon",
             "password": "pass",
             "roles": ["user"]
         }

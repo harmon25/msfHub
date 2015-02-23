@@ -10,7 +10,7 @@ from flask_jwt import jwt_required, current_user
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory('msfHub/static/img/favicon.ico')
+    return send_from_directory('msfHub/static/img', 'favicon.ico')
 
 @app.route('/',methods=['GET'])
 def index():

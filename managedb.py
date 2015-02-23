@@ -51,7 +51,7 @@ def main():
 		db.session.commit()
 		
 		db.session.close()
-		print "\nUser Role and Ability Data added to database!"
+		print "\nUser and Role data added to database!"
 	else:
 		raise Exception('Invalid command')
 
