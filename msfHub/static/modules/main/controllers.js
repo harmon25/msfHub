@@ -44,9 +44,11 @@ angular.module('Main')
 
 
 .controller('AdminController',
-    ['$scope','$rootScope','LxDialogService', 
-    function ($scope, $rootScope, LxDialogService) {
+    ['$scope','$rootScope','LxDialogService',
+    function ($scope, $rootScope, LxDialogService, userListFactory) {
 
+   
+    
     $scope.friends = [
     {name:'John', age:25, gender:'boy'},
     {name:'Jessie', age:30, gender:'girl'},
@@ -66,6 +68,22 @@ angular.module('Main')
     };
 
     }])
+
+
+.controller('UsersController',
+    ['$scope','$rootScope','LxDialogService','userListFactory',
+    function ($scope, $rootScope, LxDialogService, userListFactory) {
+
+    $scope.users = userListFactory.getUsers()
+
+    
+    $scope.opendDialog = function(dialogId)
+    {
+    LxDialogService.open(dialogId);
+    };
+
+    }])
+
 
 
 .controller('ProfileController',

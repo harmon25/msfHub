@@ -6,11 +6,11 @@ from flask import send_file, make_response, abort, jsonify, send_from_directory
 from msfHub import app, jwt
 from msfHub.models import db, User
 from flask_jwt import jwt_required, current_user
-
+from config import APP_STATIC
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory('msfHub/static/img', 'favicon.ico')
+    return send_from_directory(APP_STATIC, 'img/favicon.ico')
 
 @app.route('/',methods=['GET'])
 def index():

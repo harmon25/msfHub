@@ -22,6 +22,7 @@ angular.module('Authentication')
        console.log(AUTH_EVENTS.loginSuccess)
        var newToken = res.data.token
        var user = decodeToken.decode(newToken);
+        $rootScope.currentUser.workspace = user.workspace;
        console.log(user.name, user.roles, newToken);
        Session.create(user.name, user.roles, newToken);
        $http.defaults.headers.common['Authorization'] = 'Bearer ' + newToken; // jshint ignore:line
@@ -70,6 +71,7 @@ angular.module('Authentication')
    var tokenPayload = jwtHelper.decodeToken(token);
    return {
      name: tokenPayload.user_name,
+     workspace: tokenPayload.workspace,
      roles: tokenPayload.roles,
       }
     };

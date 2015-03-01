@@ -113,7 +113,6 @@ angular.module('msfHub', [
         .state('admin', {
             abstract: true,
             url:'/admin',
-            controller: 'AdminController',
             data: {authorizedRoles: [USER_ROLES.admin],
                 title: 'msfHub · Admin'},
             templateUrl: '/views/admin'
@@ -121,7 +120,7 @@ angular.module('msfHub', [
 
         .state('admin.editusers', {
             url:'/editusers',
-            controller: 'AdminController',
+            controller: 'UsersController',
             data: {authorizedRoles: [USER_ROLES.admin],
                 title: 'msfHub · Edit Users'},
             templateUrl: '/views/admin/users'

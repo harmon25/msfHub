@@ -21,22 +21,27 @@ return service;
 }])
 
 
-
 .factory('userListFactory',
 ['$http', function userListFactory($http){
 var factory = {};
 
 factory.getUsers = function(){
 
+var users = {users:null}
 var req = {
-        url: '/auth',
-        skipAuthorization: true,
-        method: 'POST',
-        data: credentials
+        url: '/api/users',
+        method: 'GET',
         };
 
-	return {}
+$http(req).success(function (data) {
+    users.users = data;
+    console.log(users);
+}), function(error){
+    console.log(error);
 }
+
+return users
+};
    
 
 return factory;

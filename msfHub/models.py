@@ -31,6 +31,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40))
     password_hash = db.Column(db.String(128))
+    workspace = db.Column(db.String(20))
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
     def hash_password(self, password):
@@ -42,6 +43,8 @@ class User(db.Model):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.password_hash = pwd_context.encrypt(kwargs.get('password'))
+        if not kwargs.get('workspace'):
+            self.workspace = 'default'
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

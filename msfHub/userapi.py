@@ -27,6 +27,7 @@ def make_payload(user):
         "user_id": user.id,
         "user_name": user.username,
         "roles": roles,
+        "workspace": user.workspace,
         "iat": str(datetime.utcnow()),
         "exp": str(datetime.utcnow() + app.config['JWT_EXPIRATION_DELTA'])
             }
@@ -62,6 +63,7 @@ def whoami():
 		 abort(400)
 
 @app.route('/api/users', methods=['POST'])
+@jwt_required()
 def new_user():
 	username = request.json.get('username')
 	password = request.json.get('password')
@@ -77,6 +79,20 @@ def new_user():
 	return (jsonify({'username': user.username}), 201,
     	{'Location': url_for('get_user', id=user.id, _external=True)})
 
+@app.route('/api/users', methods=['GET'])
+@jwt_required()
+def get_users():
+    userDict = {}
+    users = User.query.order_by(User.id)
+    for user in users:
+        users_roles = []
+        for r in user.roles:
+            users_roles.append(str(r))
+        userDict[user.id] = {"id":user.id, "username":user.username,"roles":users_roles, "workspace":user.workspace}
+    return jsonify(userDict)
+
+
+
 
 '''
 
@@ -91,7 +107,6 @@ fields = {
 def getUsers(): 
    users = User.query.(User.id, User.username, User._roles)
 '''
-
 
 @app.route('/api/users/<int:id>')
 def get_user(id):
