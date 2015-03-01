@@ -1,4 +1,3 @@
-
 <md-card>
 <md-card-content>
 <table class="data-table data-table--has-primary data-table--has-secondary">
@@ -24,7 +23,7 @@
   <span>  {{userInfo.username}} </span>
 </td>
 <td>
-  <span>  {{userInfo.roles}} </span>
+  <span ng-repeat="role in userInfo.roles"> <span ng-if="$odd">,</span> {{role}} </span>
 </td>
 <td>
   <span>  {{userInfo.workspace}} </span>
@@ -37,8 +36,8 @@
 
        <lx-dropdown-menu>
          <ul>
-            <li><a class="dropdown-link">Edit User</a></li>
-            <li><a class="dropdown-link">Delete User</a></li>
+            <li><a class="dropdown-link" ng-click="openEditDialog('editUserDialog', userID)" >Edit User</a></li>
+            <li><a class="dropdown-link" ng-click="openDelDialog('deleteUserDialog', userID)">Delete User</a></li>
           </ul>
                   </lx-dropdown-menu>
          </lx-dropdown>
@@ -48,10 +47,144 @@
      </tbody>
 
     </table>
-   
-
-<md-divider> </md-divider>
-<br>
-<div flex-container="row"><button class="btn btn--l btn--green btn--fab" lx-ripple><i class="mdi mdi-plus"></i></button></div>
+<div class="card__actions" >
+<div layout="row" layout-align="end center"> <button class="btn btn--l btn--green btn--fab" ng-click="openAddDialog('addUserDialog')" lx-ripple> <i class="mdi mdi-plus"></i> </button> </div>
+</div>
 </md-card-content>
+
+<lx-dialog class="dialog dialog--l" id="addUserDialog">
+    <div class="dialog__header">
+        <div class="toolbar bgc-green-500">
+            <span class="toolbar__label tc-white fs-title">
+                Enter user information to add
+            </span>
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+         <div class="p++">
+        <div flex-item>
+        <form id="createUserForm">
+            <lx-text-field label="Username" >
+                <input type="text" ng-model="createUser.username">
+            </lx-text-field>
+
+            <lx-text-field label="Password" >
+                <input type="password" ng-model="createUser.password">
+            </lx-text-field>
+
+            <lx-text-field label="Confirm Password" valid="createUser.password === createUser.confPassword" error="createUser.password !== createUser.confPassword">
+                <input type="password" ng-model="createUser.confPassword" >
+            </lx-text-field>
+            <br>
+
+ <div class="checkbox">
+    <input type="checkbox" id="userAddRole" class="checkbox__input" ng-model="createUser.user">
+    <label for="userAddRole" class="checkbox__label">User</label>
+</div>
+
+<div class="checkbox">
+    <input type="checkbox" id="adminAddRole" class="checkbox__input" ng-model="createUser.admin">
+    <label for="adminAddRole" class="checkbox__label">Admin</label>
+</div>
+
+        </form>
+    </div>
+        </div>       
+    </div>
+
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--green btn--raised" lx-ripple>Create User</button>
+  </div>
+</lx-dialog>
+
+<lx-dialog class="dialog dialog--l" id="editUserDialog">
+    <div class="dialog__header">
+        <div class="toolbar bgc-blue-500">
+            <span class="toolbar__label tc-white fs-title">
+                Edit {{editUser.id}}
+            </span>
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+         <div class="p++">
+        <div flex-item>
+        <form id="editUserForm">
+            <lx-text-field label="Username" fixed-label="true">
+                <input type="text" ng-model="editUser.name">
+            </lx-text-field>
+
+            <lx-text-field label="Default Workspace" fixed-label="true">
+                <input type="text" ng-model="editUser.workspace">
+            </lx-text-field>
+
+       
+       <br>
+        <div class="checkbox">
+    <input type="checkbox" id="userEditRole" class="checkbox__input">
+    <label for="userEditRole" class="checkbox__label">User</label>
+  </div>
+
+  <div class="checkbox">
+      <input type="checkbox" id="adminEditRole" class="checkbox__input">
+      <label for="adminEditRole" class="checkbox__label">Admin</label>
+  </div>
+
+           
+        </form>
+    </div>
+        </div>       
+    </div>
+
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--green btn--raised" lx-ripple>Commit Changes</button>
+  </div>
+</lx-dialog>
+
+<lx-dialog class="dialog dialog--l" id="deleteUserDialog">
+    <div class="dialog__header">
+        <div class="toolbar bgc-red-500">
+            <span class="toolbar__label tc-white fs-title">
+                Sure you want to Delete {{delUser.id}} ?
+            </span>
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+         <div class="p++">
+        <div flex-item>
+        <form id="editUserForm">
+           
+        <div class="checkbox">
+      <input type="checkbox" id="confirmDelete" class="checkbox__input">
+      <label for="confirmDelete" class="checkbox__label">You Sure?</label>
+      </div>
+
+            
+        </form>
+    </div>
+        </div>       
+    </div>
+
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--red btn--raised" lx-ripple>Remove</button>
+  </div>
+</lx-dialog>
+
 </md-card>

@@ -74,13 +74,40 @@ angular.module('Main')
     ['$scope','$rootScope','LxDialogService','userListFactory',
     function ($scope, $rootScope, LxDialogService, userListFactory) {
 
+    $scope.createUser = {
+         admin: false, 
+         user: false 
+        };
+
+    $scope.editUser = {
+        admin: false, 
+         user: false 
+    };
+    $scope.delUser = {};
+
     $scope.users = userListFactory.getUsers()
 
+    $scope.openEditDialog = function(dialogId, user_ID)
+    {
+    $scope.editUser.id = user_ID;
+    LxDialogService.open(dialogId);
     
-    $scope.opendDialog = function(dialogId)
+
+    };
+    
+    $scope.openAddDialog = function(dialogId)
     {
     LxDialogService.open(dialogId);
     };
+
+
+    $scope.openDelDialog = function(dialogId, user_ID)
+    {
+    $scope.delUser.id = user_ID;
+    LxDialogService.open(dialogId);
+    
+    };
+
 
     }])
 
