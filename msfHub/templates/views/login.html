@@ -2,35 +2,38 @@
 <div flex-item="5">
 
         <div class="card">
-      
+     <form name="Loginform" ng-submit="login(credentials)" role="form">  
         
             <div class="p+">
                 <strong class="fs-headline display-block">Please Login</strong>
-                <div class="paragraph fs-body-1 mt+">                   
+                <div class="paragraph fs-body-1 mt+"> 
+                                 
     <md-input-container>
         <label>Username</label>
-        <input type="text" name="username" id="username" ng-model="credentials.username" required />
-        <div ng-messages="form.username.$error">
+        <input type="text" id="username" ng-model="credentials.username" required />
+        <div ng-messages="Loginform.username.$error">
             <div ng-message="required">Username is required.</div>
          </div>
    
     </md-input-container>
     <md-input-container>
         <label>Password</label>
-        <input type="password" name="password" id="password"  ng-model="credentials.password" required />
-        <div ng-messages="form.password.$error">
+        <input type="password" id="password"  ng-model="credentials.password" required />
+        <div ng-messages="Loginform.password.$error">
             <div ng-message="required">Password is required.</div>
         </div>
     </md-input-container>
-   
+  
                 </div>
             </div>
             <div class="card__actions">
-             <button class="btn btn--m btn--green btn--raised" ng-click="login(credentials)" ng-disabled="form.$invalid || dataLoading" lx-ripple>Login</button>
-            <div ng-if="dataLoading"> <md-progress-circular class="md-hue-2" md-mode="indeterminate"></md-progress-circular> </div>
+             <button class="btn btn--m btn--green btn--raised" type="submit" ng-disabled="Loginform.$invalid" lx-ripple>Login</button>
+     
             </div>
-         
+          </form>
         </div>
-        
-    </div>
-</div>
+     
+
+   
+   </div>      
+ </div>

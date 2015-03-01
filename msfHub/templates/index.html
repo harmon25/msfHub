@@ -15,7 +15,7 @@
 
 
 <header class="header">
-<div ng-if="currentUser.roles.indexOf('guest') == -1">  <!--check if user is logged in and show toolbar if they are -->
+<div ng-if="currentUser.roles.indexOf('guest') == -1"  ng-cloak>  <!--check if user is logged in and show toolbar if they are -->
 
 <div class="menubar">
 <div class="toolbar bgc-indigo-500 tc-white-1">
@@ -41,10 +41,10 @@
     
 
 
-  <nav class="main-nav main-nav--lap-and-up">     
+  <nav class="main-nav main-nav--lap-and-up" ng-cloak>     
     
          <ul>
-           <li ng-if="currentUser.roles.indexOf('admin') != -1"><a ui-sref="admin.editusers"  class="main-nav__link" lx-ripple="white">Admin</a></li>
+           <li ng-if="currentUser.roles.indexOf('admin') != -1"><a ui-sref="admin.editusers"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
             <li><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
             <li><a ui-sref="login" class="main-nav__link" lx-ripple="white">Logout</a></li> 
          </ul>             
@@ -52,7 +52,7 @@
     </nav>
 
 
-    <nav class="main-nav main-nav--palm">     
+    <nav class="main-nav main-nav--palm" ng-cloak>     
     
             <lx-dropdown position="right" from-top>
                 <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dropdown-toggle>
@@ -73,6 +73,7 @@
 
     </div>
 
+</div> 
 </div> <!--toolbar ng-if end -->
 </header>
 
