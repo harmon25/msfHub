@@ -35,7 +35,6 @@ var req = {
 
 $http(req).success(function (data) {
     users.users = data;
-    console.log(users);
 }), function(error){
     console.log(error);
 }

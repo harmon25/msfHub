@@ -3,8 +3,8 @@
 angular.module('Authentication')
 
 .factory('AuthService',
-    ['$http', '$rootScope','Session','AUTH_EVENTS','$state','LxNotificationService','decodeToken',
-    function ($http, $rootScope, Session, AUTH_EVENTS, $state, LxNotificationService, decodeToken) {
+    ['$http', '$rootScope','Session','AUTH_EVENTS','$state','LxNotificationService','decodeToken','jwtHelper',
+    function ($http, $rootScope, Session, AUTH_EVENTS, $state, LxNotificationService, decodeToken, jwtHelper) {
        var authService = {};
 
     authService.login = function (credentials) {
@@ -29,8 +29,7 @@ angular.module('Authentication')
        $state.go('home');
       }, function(error){
         $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-        console.log(AUTH_EVENTS.loginFailed)
-        LxNotificationService.warning(error.statusText);
+        LxNotificationService.warning(AUTH_EVENTS.loginFailed);
       });
   };
 
@@ -76,6 +75,11 @@ angular.module('Authentication')
       }
     };
 
+    decodeTokenService.checkExpiry = function(token) {
+      var expireDate = jwtHelper.getTokenExpirationDate(token);
+      var isExpired = jwtHelper.isTokenExpired(token);
+      return isExpired
+    };
   return decodeTokenService;
 }])
 

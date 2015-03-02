@@ -19,12 +19,12 @@ angular.module('msfHub', [
 ])
 
 .constant('AUTH_EVENTS', {
-  loginSuccess: 'auth-login-success',
-  loginFailed: 'auth-login-failed',
-  logoutSuccess: 'auth-logout-success',
-  sessionTimeout: 'auth-session-timeout',
-  notAuthenticated: 'auth-not-authenticated',
-  notAuthorized: 'auth-not-authorized'
+  loginSuccess: 'Logged In!',
+  loginFailed: 'Login Failed!',
+  logoutSuccess: 'Logged Out!',
+  sessionTimeout: 'Your sessions token has expired!',
+  notAuthenticated: 'You are not Authenticated!',
+  notAuthorized: 'You are not Allowed!'
 })
 
 .constant("USER_ROLES", {
@@ -34,21 +34,33 @@ angular.module('msfHub', [
 })
 
 
-.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http',
-    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http) {
+.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http','LxNotificationService','jwtHelper',
+    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http, LxNotificationService,jwtHelper) {
 
     $rootScope.state = $state;
 
-    if (!Session.getToken()) {
+    if ( !Session.getToken() ) {
+      console.log(AUTH_EVENTS.notAuthenticated);
+      $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
       $rootScope.currentUser = {name: "anon", roles: ["guest"]}
+      $state.go('login');
     } else {
       $rootScope.currentUser = {};
-      var currentToken = localStorageService.get('token');
+      var currentToken = Session.getToken();
       $rootScope.currentUser = decodeToken.decode(currentToken)
       $http.defaults.headers.common['Authorization'] = 'Bearer ' + currentToken; // jshint ignore:line
     }
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
+    var token = Session.getToken();
+    var test_token = 'eyJhbGciOiJIUzI1NiIsImV4cCI6MTQyNTMxMzI2NywiaWF0IjoxNDI1MzEzMTQ3fQ.eyJ1c2VyX25hbWUiOiJhZG1pbiIsImV4cCI6MTQyNTMxMzEyMC4zMzgzODYsInVzZXJfaWQiOjEsIndvcmtzcGFjZSI6ImRlZmF1bHQiLCJyb2xlcyI6WyJhZG1pbiIsInVzZXIiXX0.D7iC9cGlTGhpZNb3hBRKGmhEFtdhjTuIsKsNGHB069M'
+    var expired = decodeToken.checkExpiry(test_token);
+    var expireDate = jwtHelper.getTokenExpirationDate(test_token);
+    var isExpred = jwtHelper.isTokenExpired(test_token);
+    console.log(expireDate);
+    console.log(isExpred)
+    console.log(token)
+    console.log(expired)
     var authorizedRoles = next.data.authorizedRoles;
     console.log(authorizedRoles);
     var user_roles = $rootScope.currentUser.roles
@@ -56,11 +68,12 @@ angular.module('msfHub', [
     console.log(AuthService.isAuthorized(authorizedRoles, user_roles))
     if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
       console.log("prevent state change");
+      console.log(AUTH_EVENTS.notAuthorized);
+      $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+      LxNotificationService.warning(AUTH_EVENTS.notAuthorized);
       event.preventDefault();
       if (AuthService.isAuthenticated()) {
         // user is not allowed
-        console.log(AUTH_EVENTS.notAuthorized);
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       } else {
         // user is not logged in
         console.log(AUTH_EVENTS.notAuthenticated);

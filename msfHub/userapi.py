@@ -23,13 +23,13 @@ def make_payload(user):
     roles = []
     for r in user.roles:
         roles.append(str(r))
+    expiry = (datetime.now() - datetime.fromtimestamp(0)) + app.config['JWT_EXPIRATION_DELTA']
     return {
-        "user_id": user.id,
-        "user_name": user.username,
-        "roles": roles,
-        "workspace": user.workspace,
-        "iat": str(datetime.utcnow()),
-        "exp": str(datetime.utcnow() + app.config['JWT_EXPIRATION_DELTA'])
+        'user_id': user.id,
+        'user_name': user.username,
+        'roles': roles,
+        'workspace': user.workspace,
+        'exp': int(expiry.total_seconds())
             }
 
 @jwt.user_handler
@@ -55,8 +55,8 @@ def row2dict(row):
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def whoami():
-	if current_user():
-		user = current_user()
+	if current_user:
+		user = current_user
 		print user
 		return jsonify({"username": user.username, "roles":str(user.roles)})
 	else:

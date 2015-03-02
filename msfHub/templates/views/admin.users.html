@@ -14,7 +14,7 @@
             </tr>
 </thead>
    <tbody>
-   <tr class="data-table__clickable-row" ng-repeat="(userID, userInfo) in users.users">
+   <tr class="data-table__clickable-row" ng-repeat="(userID, userInfo) in users.users" id="{{userInfo.username}}">
 <td>
   <span>  {{userInfo.id}} </span>
 </td>
@@ -36,8 +36,8 @@
 
        <lx-dropdown-menu>
          <ul>
-            <li><a class="dropdown-link" ng-click="openEditDialog('editUserDialog', userID)" >Edit User</a></li>
-            <li><a class="dropdown-link" ng-click="openDelDialog('deleteUserDialog', userID)">Delete User</a></li>
+            <li id="{{'edit' + userInfo.id  }}" ><a class="dropdown-link" ng-click="openEditDialog('editUserDialog', $event)" >Edit User</a></li>
+            <li id="{{'del' + userInfo.id  }}" ><a class="dropdown-link" ng-click="openDelDialog('deleteUserDialog', $event)" >Delete User</a></li>
           </ul>
                   </lx-dropdown-menu>
          </lx-dropdown>
