@@ -6,17 +6,7 @@ angular.module('Main')
     ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS',
     function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS) {
 
-	$scope.opendDialog = function(dialogId)
-    {
-    LxDialogService.open(dialogId);
-    };
-
-    $scope.closeDialog = function()
-    {
-    LxDialogService.close(dialogId);
-    };
-    
-
+    $scope.renewSession = function(credentials){AuthService.login(credentials)};
 
 
     }])
@@ -35,7 +25,7 @@ angular.module('Main')
 
 
 
-    $scope.opendDialog = function(dialogId)
+    $scope.viewReport = function(dialogId)
     {
     LxDialogService.open(dialogId);
     };

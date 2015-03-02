@@ -18,17 +18,13 @@ angular.module('Authentication')
 
     return $http(req)
       .then(function (res) {
-       $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-       console.log(AUTH_EVENTS.loginSuccess)
+       LxNotificationService.success(AUTH_EVENTS.loginSuccess);
        var newToken = res.data.token
        var user = decodeToken.decode(newToken);
-        $rootScope.currentUser.workspace = user.workspace;
-       console.log(user.name, user.roles, newToken);
-       Session.create(user.name, user.roles, newToken);
+       Session.create(user.name, user.roles, user.workspace, newToken);
        $http.defaults.headers.common['Authorization'] = 'Bearer ' + newToken; // jshint ignore:line
        $state.go('home');
       }, function(error){
-        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         LxNotificationService.warning(AUTH_EVENTS.loginFailed);
       });
   };
@@ -93,9 +89,10 @@ angular.module('Authentication')
            return localStorageService.get('token')
     } };
 
-  this.create = function (userName, userRoles, token) {
+  this.create = function (userName, userRoles,workspace, token) {
     $rootScope.currentUser.name = userName;
     $rootScope.currentUser.roles = userRoles;
+     $rootScope.currentUser.workspace = workspace;
     localStorageService.set('token', token);
   };
   

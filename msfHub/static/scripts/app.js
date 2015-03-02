@@ -34,13 +34,12 @@ angular.module('msfHub', [
 })
 
 
-.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http','LxNotificationService','jwtHelper',
-    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http, LxNotificationService,jwtHelper) {
+.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http','LxNotificationService','jwtHelper','LxDialogService', 
+    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http, LxNotificationService,jwtHelper, LxDialogService) {
 
     $rootScope.state = $state;
 
     if ( !Session.getToken() ) {
-      console.log(AUTH_EVENTS.notAuthenticated);
       $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
       $rootScope.currentUser = {name: "anon", roles: ["guest"]}
       $state.go('login');
@@ -53,34 +52,19 @@ angular.module('msfHub', [
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
     var token = Session.getToken();
-    var test_token = 'eyJhbGciOiJIUzI1NiIsImV4cCI6MTQyNTMxMzI2NywiaWF0IjoxNDI1MzEzMTQ3fQ.eyJ1c2VyX25hbWUiOiJhZG1pbiIsImV4cCI6MTQyNTMxMzEyMC4zMzgzODYsInVzZXJfaWQiOjEsIndvcmtzcGFjZSI6ImRlZmF1bHQiLCJyb2xlcyI6WyJhZG1pbiIsInVzZXIiXX0.D7iC9cGlTGhpZNb3hBRKGmhEFtdhjTuIsKsNGHB069M'
-    var expired = decodeToken.checkExpiry(test_token);
-    var expireDate = jwtHelper.getTokenExpirationDate(test_token);
-    var isExpred = jwtHelper.isTokenExpired(test_token);
-    console.log(expireDate);
-    console.log(isExpred)
-    console.log(token)
-    console.log(expired)
+    if (token){
+        var expired = decodeToken.checkExpiry(token);
+      };
     var authorizedRoles = next.data.authorizedRoles;
-    console.log(authorizedRoles);
     var user_roles = $rootScope.currentUser.roles
-    console.log(user_roles);
-    console.log(AuthService.isAuthorized(authorizedRoles, user_roles))
-    if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
-      console.log("prevent state change");
-      console.log(AUTH_EVENTS.notAuthorized);
-      $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+     if (AuthService.isAuthenticated() && expired) {
+      //sesion token has expired
+        LxDialogService.open("loginDialog");
+      } else if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
       LxNotificationService.warning(AUTH_EVENTS.notAuthorized);
       event.preventDefault();
-      if (AuthService.isAuthenticated()) {
         // user is not allowed
-      } else {
-        // user is not logged in
-        console.log(AUTH_EVENTS.notAuthenticated);
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-        $state.go('login');
-      }
-    }
+      }; 
   });
 
 

@@ -82,7 +82,7 @@
     <div class="dialog__header">
         <div class="toolbar bgc-red-300 pl++">
             <span class="toolbar__label tc-white fs-title">
-                Please Login
+                Your token has expired, please re-login
             </span>
 
             <div class="toolbar__right">
@@ -95,14 +95,39 @@
 
     <div class="dialog__content">
          <div class="p++">
+
+     <form name="sessionForm" ng-submit="renewSession(credentials)" role="form">  
         
+            <div class="p+">
+                <strong class="fs-headline display-block">Please Login</strong>
+                <div class="paragraph fs-body-1 mt+"> 
+                                 
+    <md-input-container>
+        <label>Username</label>
+        <input type="text" id="username" ng-model="credentials.username" required />
+        <div ng-messages="sessionForm.username.$error">
+            <div ng-message="required">Username is required.</div>
+         </div>
+   
+    </md-input-container>
+    <md-input-container>
+        <label>Password</label>
+        <input type="password" id="password"  ng-model="credentials.password" required />
+        <div ng-messages="sessionForm.password.$error">
+            <div ng-message="required">Password is required.</div>
+        </div>
+    </md-input-container>
+  
+                </div>
+            </div>
+          <div class="dialog__actions">
+             <button class="btn btn--m btn--green btn--raised" type="submit" ng-disabled="sessionForm.$invalid" lx-ripple lx-dialog-close>Login</button>
+     
+        </div>
+          </form>
+     
         </div>       
     </div>
-
-    <div class="dialog__actions">
-        <button class="btn btn--m btn--green btn--raised"  ng-disabled="form.$invalid" lx-ripple>Login</button>
-         </div>
-
 </lx-dialog>
 
 <md-content class="md-padding" ui-view>
