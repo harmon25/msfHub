@@ -6,7 +6,7 @@
 # @Last Modified time: 2015-02-15 15:31:41
 from flask import jsonify, request, url_for,session, render_template, g, flash,redirect, abort
 from msfHub import app, jwt
-from msfHub.models import db, User
+from msfHub.models import db, User, Role
 from datetime import datetime
 from flask_jwt import jwt_required, current_user
 
@@ -55,29 +55,35 @@ def row2dict(row):
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def whoami():
-	if current_user:
-		user = current_user
-		print user
-		return jsonify({"username": user.username, "roles":str(user.roles)})
-	else:
-		 abort(400)
+    if current_user:
+        user = current_user
+        print user
+        return jsonify({"username": user.username, "roles":str(user.roles)})
+    else:
+        abort(400)
 
 @app.route('/api/users', methods=['POST'])
 @jwt_required()
 def new_user():
-	username = request.json.get('username')
-	password = request.json.get('password')
-	role = request.json.get('role')
-	if username is None or password is None:
-		abort(400)
-	if User.query.filter_by(username=username).first() is not None:
-		abort(400)
-	user = User(username=username,role=role)
-	user.hash_password(password)
-	db.session.add(user)
-	db.session.commit()
-	return (jsonify({'username': user.username}), 201,
-    	{'Location': url_for('get_user', id=user.id, _external=True)})
+    username = request.json.get('username')
+    password = request.json.get('password')
+    roles = request.json.get('roles')
+    if username is None or password is None:
+         return (jsonify({'message': "Missing username or password"}), 400)
+    elif User.query.filter_by(username=username).first() is not None:
+        return (jsonify({'message': "User Exists"}), 400)
+    else:
+        user = User(username=username, password=password)
+
+        db.session.add(user)
+
+        for role in roles:
+            roll_to_add = Role.query.filter_by(name=role.lower()).first()
+            user.roles.append(roll_to_add)
+
+        db.session.commit()
+
+        return (jsonify({'message': 'User ' + user.username + ' created'}), 201)
 
 @app.route('/api/users', methods=['GET'])
 @jwt_required()
@@ -91,27 +97,26 @@ def get_users():
         userDict[user.id] = {"id":user.id, "username":user.username,"roles":users_roles, "workspace":user.workspace}
     return jsonify(userDict)
 
+@app.route('/api/users', methods=['DELETE'])
+@jwt_required()
+def del_user():
+    user_id = request.json.get('id')
+    if User.query.get(user_id) is not None:
+        user = User.query.get(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return (jsonify({'message': 'User Deleted'}), 201)
+    else:
+        return (jsonify({'message': 'User does not Exist'}), 400)
 
-
-
-'''
-
-fields = {
-    'id': fields.String(),    
-    'name': fields.String(attribute='private_name'),
-    'roles': fields.String,
-}
-
-
-@app.route('/api/users', methods=['GET'])
-def getUsers(): 
-   users = User.query.(User.id, User.username, User._roles)
-'''
 
 @app.route('/api/users/<int:id>')
 def get_user(id):
     user = User.query.get(id)
+    roles = []
+    for r in user.roles:
+        roles.append(str(r))
     if not user:
         abort(400)
-    return jsonify({'username': user.username})
+    return jsonify({'username': user.username, 'roles': roles, 'workspace': user.workspace})
 

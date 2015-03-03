@@ -1,10 +1,10 @@
-﻿<div flex-container="row" flex-align="center" >
+﻿<div flex-container="row" flex-align="center"  flex-gutter="24" >
 
-<div flex-item="6">
- <div class="card">
+<div flex-item="3" >
+ <div class="card"  >
  <div class="p+">
- <strong class="fs-headline display-block">Home</strong>
-    <span class="fs-subhead tc-black-2 display-block"> {{$rootScope.currentUser.name}}</span>
+ <strong class="fs-headline display-block"> Enumeration</strong>
+    <span class="fs-subhead tc-black-2 display-block"> {{currentUser.name}}</span>
    <div class="paragraph fs-body-1 mt+"> 
 
    <div ng-if="currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
@@ -14,4 +14,35 @@
 </div>
 </div>
 
+<div flex-item="3" >
+ <div class="card"  >
+ <div class="p+">
+ <strong class="fs-headline display-block"> Exploits</strong>
+    <span class="fs-subhead tc-black-2 display-block"> {{currentUser.name}}</span>
+   <div class="paragraph fs-body-1 mt+"> 
+
+   <div ng-if="currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
+
 </div>
+</div>
+</div>
+</div>
+
+
+<div flex-item="3" >
+ <div class="card"  >
+ <div class="p+">
+ <strong class="fs-headline display-block"> Post</strong>
+    <span class="fs-subhead tc-black-2 display-block"> {{currentUser.name}}</span>
+   <div class="paragraph fs-body-1 mt+"> 
+
+   <div ng-if="currentUser.roles.indexOf('admin') >= 0" ><i class="mdi mdi-xbox"></i></div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+</div>
+

@@ -14,8 +14,7 @@ angular.module('msfHub', [
     'ngMaterial',        // for material design - may use just Lumx
     'lumx',              // for material design
     'ngSanitize',        // for markdown
-    'btford.markdown'    // markdown directive
-
+    'btford.markdown'   // markdown directive
 ])
 
 .constant('AUTH_EVENTS', {
@@ -58,6 +57,7 @@ angular.module('msfHub', [
     var authorizedRoles = next.data.authorizedRoles;
     var user_roles = $rootScope.currentUser.roles
      if (AuthService.isAuthenticated() && expired) {
+      event.preventDefault();
       //sesion token has expired
         LxDialogService.open("loginDialog");
       } else if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
@@ -66,8 +66,6 @@ angular.module('msfHub', [
         // user is not allowed
       }; 
   });
-
-
 
     }])
 
@@ -87,14 +85,14 @@ angular.module('msfHub', [
         .state('home', {
             url:'/home',
             controller: 'HomeController',
-            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
+            data: {authorizedRoles: [USER_ROLES.user],
                     title: 'msfHub · Home'},
             templateUrl: '/views/home'
          })
         .state('about', {
             url:'/about',
             controller: 'HomeController',
-            data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.admin],
+            data: {authorizedRoles: [USER_ROLES.user],
                     title: 'msfHub · About'},
             templateUrl: '/views/about'
         })
@@ -115,11 +113,11 @@ angular.module('msfHub', [
             templateUrl: '/views/admin'
         })
 
-        .state('admin.editusers', {
-            url:'/editusers',
+        .state('admin.users', {
+            url:'/users',
             controller: 'UsersController',
             data: {authorizedRoles: [USER_ROLES.admin],
-                title: 'msfHub · Edit Users'},
+                title: 'msfHub · Users'},
             templateUrl: '/views/admin/users'
         })
          
