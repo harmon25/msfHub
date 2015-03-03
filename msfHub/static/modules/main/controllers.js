@@ -71,9 +71,9 @@ angular.module('Main')
     $scope.openAddDialog = function(dialogId) {
         LxDialogService.open(dialogId); };
 
-    $scope.openDelDialog = function(dialogId, event) { 
-        var target = angular.element(event.target).parent(); // get uid of selected element 
-        $scope.userToDelete = target.attr("uid") // set that UID to a scope variable
+    $scope.openDelDialog = function(dialogId, uid, uname) { 
+        $scope.userToDelete = uid // set that UID to a scope variable
+        $scope.usernameToDelete = uname // set that UID to a scope variable
         LxDialogService.open(dialogId); };
 }])
 

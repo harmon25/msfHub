@@ -45,7 +45,7 @@
     <div class="dialog__header">
         <div class="toolbar bgc-red-500">
             <span class="toolbar__label tc-white fs-title">
-                Delete {{userToDelete}} ?
+                Delete {{usernameToDelete}} ?
             </span>
             <div class="toolbar__right">
                 <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
@@ -102,7 +102,7 @@
   <span>  {{userInfo.workspace}} </span>
 </td>
 <td>
-  <button uid="{{userInfo.username}}" class="btn btn--l btn--black btn--icon" ng-click="openDelDialog('deleteUserDialog', $event)" lx-ripple> <i class="mdi mdi-close-circle"></i> </button>
+  <button uid="{{userInfo.id}}" uname="{{userInfo.username}}" class="btn btn--l btn--black btn--icon" ng-click="openDelDialog('deleteUserDialog', userInfo.id, userInfo.username)" lx-ripple> <i class="mdi mdi-close-circle"></i> </button>
 </td>
  </tr>
   
