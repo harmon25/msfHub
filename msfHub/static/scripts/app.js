@@ -82,6 +82,7 @@ angular.module('msfHub', [
             data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.guest],
                     title: 'msfHub · Login' }
         })
+
         .state('home', {
             url:'/home',
             controller: 'HomeController',
@@ -89,12 +90,29 @@ angular.module('msfHub', [
                     title: 'msfHub · Home'},
             templateUrl: '/views/home'
          })
+
         .state('about', {
             url:'/about',
             controller: 'HomeController',
             data: {authorizedRoles: [USER_ROLES.user],
                     title: 'msfHub · About'},
             templateUrl: '/views/about'
+        })
+        
+        .state('hosts', {
+            url:'/hosts',
+            controller: 'DbController',
+            data: {authorizedRoles: [USER_ROLES.user],
+                title: 'msfHub · Hosts'},
+            templateUrl: '/views/hosts'
+        })
+
+        .state('services', {
+            url:'/services',
+            controller: 'DbController',
+            data: {authorizedRoles: [USER_ROLES.user],
+                title: 'msfHub · Services'},
+            templateUrl: '/views/services'
         })
 
         .state('reports', {

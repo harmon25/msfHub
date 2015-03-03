@@ -26,6 +26,18 @@ def view_home():
 	print current_user
 	return make_response(open('msfHub/templates/views/home.html').read())
 
+@app.route('/views/hosts',methods=['GET'])
+@jwt_required()
+def view_hosts():
+	print current_user
+	return make_response(open('msfHub/templates/views/hosts.html').read())
+
+@app.route('/views/services',methods=['GET'])
+@jwt_required()
+def view_services():
+	print current_user
+	return make_response(open('msfHub/templates/views/services.html').read())
+
 @app.route('/views/reports',methods=['GET'])
 @jwt_required()
 def view_reports():
@@ -52,7 +64,6 @@ def view_admin_users():
 def view_profile():
     return make_response(open('msfHub/templates/views/profile.html').read())
 
-
 @app.errorhandler(401)
 def custom_401(error):
 	message = {"success": False, "message": "Authentication Failed"}
@@ -67,9 +78,6 @@ def row2dict(row):
         d[column.name] = str(getattr(row, column.name))
     return d
 
-
-	# try to authenticate with username/password
-	#user = User.query.filter_by(username=username).first()
 	
 
 		
