@@ -1,2 +1,2 @@
-# metaflask
+# msfHub
 Metasploit front-end powered by Flask and AngularJS + ngMaterial and Lumx
