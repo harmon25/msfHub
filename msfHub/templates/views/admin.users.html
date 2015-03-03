@@ -71,23 +71,25 @@
 
 </lx-dialog>
 
-<md-card>
-<md-card-content>
-<table class="data-table data-table--has-primary data-table--has-secondary">
+
+<div class="card">
+ <div class="p+">
+   <span class="fs-headline tc-black-2 display-block">Users</span>
+<table  class="data-table data-table--has-primary data-table--has-secondary" flex>
 <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Roles</th>
                 <th>Workspace</th>
-                <th></th>
+                <th>Delete</th>
             </tr>
             <tr>
                 <td colspan="5" class="divider divider--dark"></td>
             </tr>
 </thead>
    <tbody>
-   <tr class="data-table__clickable-row" ng-repeat="(userID, userInfo) in users.users" id="{{userInfo.username}}">
+   <tr class="data-table__row" ng-repeat="(userID, userInfo) in users.users" id="{{userInfo.username}}">
 <td>
   <span>  {{userInfo.id}} </span>
 </td>
@@ -96,24 +98,32 @@
   <span>  {{userInfo.username}} </span>
 </td>
 <td>
-  <span ng-repeat="role in userInfo.roles"> <span ng-if="$odd">,</span> {{role}} </span>
+  <span ng-repeat="role in userInfo.roles"> 
+  <span ng-if="role == 'admin'">
+    <i class="mdi mdi-account-star"></i> 
+  </span>
+ <span ng-if="role == 'user'">
+    <i class="mdi mdi-account"></i> 
+  </span>
+  </span>
 </td>
 <td>
   <span>  {{userInfo.workspace}} </span>
 </td>
 <td>
-  <button uid="{{userInfo.id}}" uname="{{userInfo.username}}" class="btn btn--l btn--black btn--icon" ng-click="openDelDialog('deleteUserDialog', userInfo.id, userInfo.username)" lx-ripple> <i class="mdi mdi-close-circle"></i> </button>
+  <button class="btn btn--l btn--red btn--icon" ng-click="openDelDialog('deleteUserDialog', userInfo.id, userInfo.username)" lx-ripple> <i class="mdi mdi-close"></i> </button>
 </td>
  </tr>
   
      </tbody>
 
     </table>
+</div>
 <div class="card__actions" >
 <div layout="row" layout-align="start center"> <button class="btn btn--l btn--green btn--fab" ng-click="openAddDialog('addUserDialog')" lx-ripple> <i class="mdi mdi-plus"></i> </button> </div>
 </div>
-</md-card-content>
-</md-card>
+</div>
+
 
 
 

@@ -6,13 +6,18 @@
  <strong class="fs-headline display-block"> Enumeration</strong>
    
    <div class="paragraph fs-body-1 mt+"> 
-<div layout="row" layout-align="end center">
- 	<lx-search-filter model="searchFilter.first" position="right" closed placeholder="Search"></lx-search-filter>
- </div>
-  
+<div flex-item>
+        <lx-select ng-model="selects.selectedExploit" placeholder="Exploit" choices="exploitList" floating-label>
+            <lx-select-selected>
+                {{ $selected.exploitList }}
+            </lx-select-selected>
 
+            <lx-select-choices>
+                {{ $choice.exploitList[$index] }}
+            </lx-select-choices>
+        </lx-select>
+    </div>
   
-
 </div>
 </div>
 </div>
@@ -23,9 +28,18 @@
  <div class="p+">
  <strong class="fs-headline display-block"> Exploits</strong>       
    <div class="paragraph fs-body-1 mt+"> 
-<div layout="row" layout-align="end center">
-	<lx-search-filter model="searchFilter.second" position="right" closed placeholder="Search"></lx-search-filter>
- </div>
+
+<div flex-item>
+        <lx-select ng-model="selects.selectedPerson" placeholder="Lorem Ipsum" choices="people" floating-label>
+            <lx-select-selected>
+                {{ $selected.name }} - {{ $selected.age }}
+            </lx-select-selected>
+
+            <lx-select-choices>
+                {{ $choice.email }}
+            </lx-select-choices>
+        </lx-select>
+    </div>
 
 
 
@@ -41,9 +55,18 @@
  <strong class="fs-headline display-block"> Post</strong>
   
    <div class="paragraph fs-body-1 mt+"> 
-   <div layout="row" layout-align="end center">
-	<lx-search-filter model="searchFilter.third" position="right" closed placeholder="Search"></lx-search-filter>
-	</div>
+   
+   <div flex-item>
+        <lx-select ng-model="selects.selectedPerson" placeholder="Lorem Ipsum" choices="people" floating-label>
+            <lx-select-selected>
+                {{ $selected.name }} - {{ $selected.age }}
+            </lx-select-selected>
+
+            <lx-select-choices>
+                {{ $choice.email }}
+            </lx-select-choices>
+        </lx-select>
+    </div>
 
 </div>
 </div>

@@ -13,6 +13,20 @@ angular.module('Main')
 .controller('HomeController',
     ['$scope','$rootScope', 
     function ($scope, $rootScope) {
+
+
+$scope.people = [
+    { name: 'Adam',      email: 'adam@email.com',      age: 10 },
+    { name: 'Amalie',    email: 'amalie@email.com',    age: 12 },
+    { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30 },
+    { name: 'Samantha',  email: 'samantha@email.com',  age: 31 },
+    { name: 'Estefanía', email: 'estefanía@email.com', age: 16 },
+    { name: 'Natasha',   email: 'natasha@email.com',   age: 54 },
+    { name: 'Nicole',    email: 'nicole@email.com',    age: 43 },
+    { name: 'Adrian',    email: 'adrian@email.com',    age: 21 }
+];
+
+
         
 }])
 
@@ -35,13 +49,14 @@ angular.module('Main')
 }])
 
 .controller('UsersController',
-    ['$scope','$rootScope','LxDialogService','userListFactory','UserService', 'filterFilter',
-    function ($scope, $rootScope, LxDialogService, userListFactory, UserService, filterFilter) {
+    ['$scope','$rootScope','LxDialogService','UserFactory', 'filterFilter',
+    function ($scope, $rootScope, LxDialogService, UserFactory, filterFilter) {
+    UserFactory.getUsers();
+    
+    $scope.users = UserFactory.data // get the users 
 
-    $scope.users = userListFactory.getUsers() // get the users 
-
-    $scope.addUser = function(user){UserService.createUser(user)} // add user dialog action
-    $scope.deleteUser = function(user_id){UserService.deleteUser(user_id)} // delete user dialog action
+    $scope.addUser = function(user){UserFactory.createUser(user)} // add user dialog action
+    $scope.deleteUser = function(user_id){UserFactory.deleteUser(user_id)} // delete user dialog action
     
     // role list to manage selected roles for create user dialog
     $scope.newuserRoles = [

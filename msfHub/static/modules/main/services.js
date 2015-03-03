@@ -2,52 +2,43 @@
 
 angular.module('Main')
 
-.factory('userListFactory',
-['$http', function userListFactory($http){
-var factory = {};
+.factory('UserFactory',
+['$http','LxNotificationService', function userListFactory($http,LxNotificationService){
+var UserFactory = {
 
-factory.getUsers = function(){
+    data: {
+        users: []
+    },
 
-var users = {users:null}
-var req = {
-        url: '/api/users',
-        method: 'GET'
-        };
+    getUsers : function(){
+        var req = {
+            url: '/api/users',
+            method: 'GET'
+            };
 
-$http(req).success(function (data) {
-    users.users = data;
-}), function(error){
-    console.log(error);
-}
+        $http(req).success(function (data) {
+            UserFactory.data.users = data;
+        }).error ( function (error) {
+            console.log(error)
+         });
+    },
 
-return users
-};
-   
+    createUser : function(User){
+       var req = {url: '/api/users',
+                 method: 'POST',
+                 data: User
+                 };
 
-return factory;
+        $http(req).success(function (response) {
+            UserFactory.getUsers();
+            console.log(response);
+            LxNotificationService.success(response.message);
+        }).error ( function (data) {
+            LxNotificationService.warning(data.message);
+        });     
+    },
 
-}])
-
-.service('UserService',
-['$http','LxNotificationService','$state','LxDialogService', function ($http, LxNotificationService, LxDialogService, $state){
-var service = {};
-
-    service.createUser = function(User){
-            
-            var req = {url: '/api/users',
-                       method: 'POST',
-                       data: User
-                       };
-
-            $http(req).success(function (response) {
-                console.log(response);
-                LxNotificationService.success(response.message);
-            }).error ( function (data) {
-                LxNotificationService.warning(data.message);
-             });
-        };
-
-    service.deleteUser = function(user_id){
+    deleteUser : function(user_id){
         var req = {
                 url: '/api/users',
                 method: 'DELETE',
@@ -56,14 +47,39 @@ var service = {};
                 };
 
         $http(req).success(function (response){
-                console.log(response);
-                 LxNotificationService.success(response.message);
-            }).error ( function (error){
-                 LxNotificationService.warning(error.message);
-            })
-
-        };
-
-    return service;
-
+            UserFactory.getUsers();
+            console.log(response);
+            LxNotificationService.success(response.message);
+        }).error ( function (error){
+            LxNotificationService.warning(error.message);
+         });       
+    }
+};
+return UserFactory;
 }])
+
+
+.factory('ExploitFactory',
+['$http','LxNotificationService', function userListFactory($http,LxNotificationService){
+var ExploitFactory= {
+
+    data: {
+        exploits: []
+    },
+
+    getExploits : function(){
+        var req = {
+            url: '/api/exploits',
+            method: 'GET'
+            };
+
+        $http(req).success(function (data) {
+            ExploitFactory.data.exploits = data;
+        }).error ( function (error) {
+            console.log(error)
+         });
+    }
+
+};
+return ExploitFactory;
+}]);

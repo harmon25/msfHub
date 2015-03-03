@@ -136,7 +136,8 @@ angular.module('msfHub', [
             controller: 'UsersController',
             data: {authorizedRoles: [USER_ROLES.admin],
                 title: 'msfHub · Users'},
-            templateUrl: '/views/admin/users'
+            templateUrl: '/views/admin/users',
+            cache: false
         })
          
          .state('profile', {
