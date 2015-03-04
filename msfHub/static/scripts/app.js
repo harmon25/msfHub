@@ -33,30 +33,41 @@ angular.module('msfHub', [
 })
 
 
-.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','Session','decodeToken', 'localStorageService','$http','LxNotificationService','jwtHelper','LxDialogService', 
-    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, Session, decodeToken, localStorageService, $http, LxNotificationService,jwtHelper, LxDialogService) {
+.run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','SessionFactory','$http','LxNotificationService','LxDialogService', 
+    function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, SessionFactory, $http, LxNotificationService, LxDialogService) {
+    SessionFactory.checkLocalToken();
+    var token = SessionFactory.session.UserToken
+    console.log(token)
 
     $rootScope.state = $state;
 
-    if ( !Session.getToken() ) {
+    if (SessionFactory.session.UserToken == null) {
+      $rootScope.currentUser = SessionFactory.session
       $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-      $rootScope.currentUser = {name: "anon", roles: ["guest"]}
-      $state.go('login');
     } else {
-      $rootScope.currentUser = {};
-      var currentToken = Session.getToken();
-      $rootScope.currentUser = decodeToken.decode(currentToken)
-      $http.defaults.headers.common['Authorization'] = 'Bearer ' + currentToken; // jshint ignore:line
+      SessionFactory.checkLocalToken();
+      var token = SessionFactory.session.UserToken
+      console.log(token)
+      SessionFactory.createSession(token);
+      $rootScope.currentUser = SessionFactory.session
+      $http.defaults.headers.common['Authorization'] = 'Bearer ' + token; // jshint ignore:line
     }
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
-    var token = Session.getToken();
-    if (token){
-        var expired = decodeToken.checkExpiry(token);
+    SessionFactory.checkLocalToken();
+     var token = SessionFactory.session.UserToken
+      console.log(token)
+    
+    if (SessionFactory.session.UserToken != null) {
+        var token = SessionFactory.session.UserToken
+        SessionFactory.checkTokenExpiry(token);
+        SessionFactory.createSession(token);
+        $rootScope.currentUser = SessionFactory.session
       };
     var authorizedRoles = next.data.authorizedRoles;
+    $rootScope.currentUser = SessionFactory.session
     var user_roles = $rootScope.currentUser.roles
-     if (AuthService.isAuthenticated() && expired) {
+     if (AuthService.isAuthenticated() && SessionFactory.session.expired) {
       event.preventDefault();
       //sesion token has expired
         LxDialogService.open("loginDialog");

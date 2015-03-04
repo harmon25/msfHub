@@ -3,8 +3,8 @@
 angular.module('Authentication')
 
 .factory('AuthService',
-    ['$http', '$rootScope','Session','AUTH_EVENTS','$state','LxNotificationService','decodeToken','jwtHelper',
-    function ($http, $rootScope, Session, AUTH_EVENTS, $state, LxNotificationService, decodeToken, jwtHelper) {
+    ['$http', '$rootScope','SessionFactory','AUTH_EVENTS','$state','LxNotificationService',
+    function ($http, $rootScope, SessionFactory, AUTH_EVENTS, $state, LxNotificationService) {
        var authService = {};
 
     authService.login = function (credentials) {
@@ -16,21 +16,20 @@ angular.module('Authentication')
         data: credentials
         };
 
-    return $http(req)
-      .then(function (res) {
+    return $http(req).success(function (response) {
        LxNotificationService.success(AUTH_EVENTS.loginSuccess);
-       var newToken = res.data.token
-       var user = decodeToken.decode(newToken);
-       Session.create(user.name, user.roles, user.workspace, newToken);
+       var newToken = response.token
+       SessionFactory.createSession(newToken);
+       $rootScope.currentUser = SessionFactory.session
        $http.defaults.headers.common['Authorization'] = 'Bearer ' + newToken; // jshint ignore:line
        $state.go('home');
-      }, function(error){
-        LxNotificationService.warning(AUTH_EVENTS.loginFailed);
+      }).error( function (data){
+        LxNotificationService.warning(data);
       });
   };
 
   authService.isAuthenticated = function () {
-    return !!Session.getToken();
+    return !!!SessionFactory.session.UserToken == null;
   };
  
   authService.isAuthorized = function (authorizedRoles, userRoles) {
@@ -58,50 +57,53 @@ angular.module('Authentication')
 
 angular.module('Authentication')
 
-.service('decodeToken',
-['localStorageService', 'jwtHelper', function (localStorageService, jwtHelper) {
-  var decodeTokenService = {};
+.factory('SessionFactory',
+['$rootScope', 'localStorageService', 'jwtHelper', function ($rootScope, localStorageService, jwtHelper) {
+var SessionFactory = {
 
-  decodeTokenService.decode = function(token){
-   var tokenPayload = jwtHelper.decodeToken(token);
-   return {
-     name: tokenPayload.user_name,
-     workspace: tokenPayload.workspace,
-     roles: tokenPayload.roles,
-      }
-    };
+  session: {username: "",
+            roles: ['guest'],
+            workspace: "",
+            expired: false,
+            UserToken: null },
 
-    decodeTokenService.checkExpiry = function(token) {
-      var expireDate = jwtHelper.getTokenExpirationDate(token);
-      var isExpired = jwtHelper.isTokenExpired(token);
-      return isExpired
-    };
-  return decodeTokenService;
-}])
-
-.service('Session',
-['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
-  this.getToken = function () {
-      
-      if (!localStorageService.get('token')) {
-        return false;
+  checkLocalToken: function () {
+      if (localStorageService.get('token') != null ) {
+        console.log('we got a token')
+      SessionFactory.session.UserToken = localStorageService.get('token')
     } else {
-           return localStorageService.get('token')
-    } };
+        console.log('we dont have a token')
+         SessionFactory.session.UserToken = null
+    }; 
+  },
 
-  this.create = function (userName, userRoles,workspace, token) {
-    $rootScope.currentUser.name = userName;
-    $rootScope.currentUser.roles = userRoles;
-     $rootScope.currentUser.workspace = workspace;
-    localStorageService.set('token', token);
-  };
+  checkTokenExpiry: function(token) {
+    var expDate = jwtHelper.getTokenExpirationDate(token);
+    var isExpired = jwtHelper.isTokenExpired(token);
+    $rootScope.currentUser.expired = isExpired;
+  },
+
+  createSession: function(token) {
+    localStorageService.add('token', token);
+    var tokenPayload = jwtHelper.decodeToken(token);
+    SessionFactory.session.username = tokenPayload.user_name;
+    SessionFactory.session.roles = tokenPayload.roles;
+    SessionFactory.session.workspace = tokenPayload.workspace;
+    SessionFactory.session.UserToken = token;
+
   
-  this.destroy = function () {
-    $rootScope.currentUser.name = 'anon';
-    $rootScope.currentUser.roles  = ["guest"];
+  },
+ 
+  destroySession: function () {
     localStorageService.clearAll();
-  };
-
-  return this;
-}])
+    SessionFactory.session.username = 'anon';
+    SessionFactory.session.roles = ['guest'];
+    SessionFactory.session.workspace = '';
+    SessionFactory.session.UserToken = null;
+    SessionFactory.session.expired = false;
+    $rootScope.currentUser = SessionFactory.session;
+     }
+};
+  return SessionFactory;
+}]);
 
