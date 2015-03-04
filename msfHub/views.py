@@ -20,11 +20,11 @@ def index():
 def view_login():
     return make_response(open('msfHub/templates/views/login.html').read())
 
-@app.route('/views/home',methods=['GET'])
+@app.route('/views/dash',methods=['GET'])
 @jwt_required()
-def view_home():
+def view_dash():
 	print current_user
-	return make_response(open('msfHub/templates/views/home.html').read())
+	return make_response(open('msfHub/templates/views/dash.html').read())
 
 @app.route('/views/hosts',methods=['GET'])
 @jwt_required()

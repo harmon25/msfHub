@@ -3,8 +3,8 @@
 angular.module('Authentication')
 
 .controller('LoginController',
-    ['$scope', 'LxNotificationService', 'LxDialogService','SessionFactory','AuthService',
-    function ($scope, LxNotificationService, LxDialogService, SessionFactory, AuthService) {
+    ['$scope', 'LxNotificationService', 'SessionFactory','AuthService',
+    function ($scope, LxNotificationService, SessionFactory, AuthService) {
     
     SessionFactory.destroySession()
     
@@ -14,11 +14,5 @@ angular.module('Authentication')
 
     $scope.login = function(credentials){AuthService.login(credentials)};
     
-    $scope.opendDialog = function(dialogId)
-    {
-    LxDialogService.open(dialogId);
-    };
-
-
     }])
 

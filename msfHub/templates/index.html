@@ -28,7 +28,7 @@
             </button>
     <lx-dropdown-menu>
         <ul>
-            <li ui-sref-active="active" class=""><a ui-sref="home" class="dropdown-link">Home</a></li>
+            <li ui-sref-active="active" class=""><a ui-sref="dashboard" class="dropdown-link">Dash</a></li>
             <li ui-sref-active="active" class=""><a ui-sref="about" class="dropdown-link">About</a></li>
             <li ui-sref-active="active" class=""><a ui-sref="reports" class="dropdown-link">Reports</a></li>
             <li class="dropdown-divider"></li>
@@ -42,8 +42,8 @@
 <span class="toolbar__label fs-title"> msfHub</span>
 <nav class="main-nav main-nav--lap-and-up" >     
     <ul>
-        <li ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
-        <li><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
+        <li ui-sref-active="active" ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
+        <li ui-sref-active="active"><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
         <li><a ui-sref="login" class="main-nav__link" lx-ripple="white">Logout</a></li> 
     </ul>             
 </nav>

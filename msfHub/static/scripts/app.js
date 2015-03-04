@@ -32,55 +32,55 @@ angular.module('msfHub', [
   user: "user"
 })
 
-
+// on each page refresh or app start, run this stuff
 .run(['$rootScope', '$state','$urlRouter','AuthService','AUTH_EVENTS','SessionFactory','$http','LxNotificationService','LxDialogService', 
     function ($rootScope, $state, $urlRouter, AuthService, AUTH_EVENTS, SessionFactory, $http, LxNotificationService, LxDialogService) {
+    
+    //check if the user has a token
     SessionFactory.checkLocalToken();
-    var token = SessionFactory.session.UserToken
-    console.log(token)
 
     $rootScope.state = $state;
 
+    //if there is no token have a guest session 
     if (SessionFactory.session.UserToken == null) {
       $rootScope.currentUser = SessionFactory.session
-      $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
     } else {
+      //you must hae a token check token and set it in session factory
       SessionFactory.checkLocalToken();
       var token = SessionFactory.session.UserToken
-      console.log(token)
+      //recreate the existing session
       SessionFactory.createSession(token);
+      //set session user to rootScope object
       $rootScope.currentUser = SessionFactory.session
+      //set headers again
       $http.defaults.headers.common['Authorization'] = 'Bearer ' + token; // jshint ignore:line
     }
 
-    $rootScope.$on('$stateChangeStart', function (event, next) {
-    SessionFactory.checkLocalToken();
-     var token = SessionFactory.session.UserToken
-      console.log(token)
-    
+
+    //on each state change do this stuff
+    $rootScope.$on('$stateChangeStart', function (event, next) {  
     if (SessionFactory.session.UserToken != null) {
-        var token = SessionFactory.session.UserToken
-        SessionFactory.checkTokenExpiry(token);
-        SessionFactory.createSession(token);
-        $rootScope.currentUser = SessionFactory.session
-      };
-    var authorizedRoles = next.data.authorizedRoles;
-    $rootScope.currentUser = SessionFactory.session
-    var user_roles = $rootScope.currentUser.roles
-     if (AuthService.isAuthenticated() && SessionFactory.session.expired) {
-      event.preventDefault();
-      //sesion token has expired
-        LxDialogService.open("loginDialog");
+          SessionFactory.checkTokenExpiry( $rootScope.currentUser.UserToken);
+        };
+        var authorizedRoles = next.data.authorizedRoles;
+        var user_roles = $rootScope.currentUser.roles
+        // if you are authenticated - but your token is expired - shoot a dialog
+    if (AuthService.isAuthenticated() && SessionFactory.checkTokenExpiry()) {
+         //sesion token has expired
+         event.preventDefault();
+         LxDialogService.open("loginDialog"); //launch login dialog - lumx service
+      // if you are not authorized for the view - get outa town
       } else if (!AuthService.isAuthorized(authorizedRoles, user_roles)) {
-      LxNotificationService.warning(AUTH_EVENTS.notAuthorized);
-      event.preventDefault();
-        // user is not allowed
-      }; 
-  });
+          // user is not allowed
+           LxNotificationService.warning(AUTH_EVENTS.notAuthorized); //lumx notification servuce
+           event.preventDefault();
+        }; 
+    });
 
     }])
 
-.config(['$stateProvider','$urlRouterProvider','USER_ROLES','jwtInterceptorProvider','$httpProvider', function ($stateProvider, $urlRouterProvider, USER_ROLES, $httpProvider) {
+//config and state definitions 
+.config(['$stateProvider','$urlRouterProvider','USER_ROLES','$httpProvider', function ($stateProvider, $urlRouterProvider, USER_ROLES, $httpProvider) {
 
     $urlRouterProvider.otherwise("/");
     
@@ -94,17 +94,17 @@ angular.module('msfHub', [
                     title: 'msfHub · Login' }
         })
 
-        .state('home', {
-            url:'/home',
-            controller: 'HomeController',
+        .state('dashboard', {
+            url:'/dashboard',
+            controller: 'DashController',
             data: {authorizedRoles: [USER_ROLES.user],
-                    title: 'msfHub · Home'},
-            templateUrl: '/views/home'
+                    title: 'msfHub · Dashboard'},
+            templateUrl: '/views/dash'
          })
 
         .state('about', {
             url:'/about',
-            controller: 'HomeController',
+            controller: 'DashController',
             data: {authorizedRoles: [USER_ROLES.user],
                     title: 'msfHub · About'},
             templateUrl: '/views/about'

@@ -10,7 +10,7 @@ angular.module('Main')
 
     }])
 
-.controller('HomeController',
+.controller('DashController',
     ['$scope','$rootScope', 
     function ($scope, $rootScope) {
 
