@@ -11,3 +11,4 @@ JWT_EXPIRATION_DELTA = timedelta(seconds=3000)
 WHOOSH_BASE = os.path.join(APP_ROOT, '../msfHubWhoosh.db')
 MAX_SEARCH_RESULTS = 50
 MSF_MODULE_BASE = '/opt/metasploit-framework/modules'
+MSF_PASS = 'msfPass'

@@ -22,29 +22,30 @@ angular.module('Main')
 
 
 .controller('ModulePanelController',
-    ['$scope','$rootScope','$mdSidenav', '$log',
-    function ($scope, $rootScope, $mdSidenav, $log) {
-    var mpCtrl = this;
-
+    ['$scope','$rootScope','$mdSidenav', '$log','LxNotificationService',
+    function ($scope, $rootScope, $mdSidenav, $log, LxNotificationService) {
 
    
-   mpCtrl.close = function() {
+   $scope.close = function() {
     $mdSidenav('left').close()
                         .then(function(){
                           $log.debug("close RIGHT is done");
                         });
   };
    
+    $scope.readyCB = function() {
+        $log.info('ready called');
+        $log.log("Tree instance = " + $scope.treeInstance);  
+    };
 
-
-    mpCtrl.treeData = [
-            { id : 'ajson1', parent : '#', text : 'Simple root node', state: { opened: false} },
-            { id : 'ajson2', parent : '#', text : 'Root node 2', state: { opened: false} },
-            { id : 'ajson3', parent : 'ajson2', text : 'Child 1', state: { opened: false} },
-            { id : 'ajson4', parent : 'ajson2', text : 'Child 2' , state: { opened: false}}
+   $scope.treeData = [
+            { id : 'expTree', parent : '#', text : 'Exploits', state: { opened: false} },
+            { id : 'auxTree', parent : '#', text : 'Auxiliary', state: { opened: false} },
+            { id : 'postTree', parent : '#', text : 'Post', state: { opened: false} },
+            { id : 'PayloadTree', parent : '#', text : 'Payloads', state: { opened: false}}
         ];
 
-    mpCtrl.treeConfig = {
+    $scope.treeConfig = {
             core : {
                 multiple : false,
                 animation: false,
@@ -55,23 +56,27 @@ angular.module('Main')
                 worker : true
             },
             types : {
+                '#': {
+                     "max_depth" : 4
+                },
                 default : {
                     icon : 'mdi mdi-folder'
                 },
-                star : {
-                    icon : 'mdi mdi-close'
+                'root' : {
+                    icon : 'mdi mdi-folder-outline'
                 },
                 cloud : {
                     icon : 'mdi mdi-close'
                 }
             },
             version : 1,
-            plugins : ['types']
+            plugins : ['types','unique']
         };
 
-
-
-
+ $scope.treeInstanceDemo = function() {
+            var selectedNode = $scope.treeInstance.jstree(true).get_selected();
+             LxNotificationService.warning('Selected node id is ' + selectedNode);
+         };
       
 }])
 

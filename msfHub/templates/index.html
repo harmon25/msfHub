@@ -103,18 +103,22 @@
   
 
     
-  <section layout="column" ng-controller="ModulePanelController as mpCtrl" flex>
+  <section layout="column" ng-controller="ModulePanelController" flex>
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
       <md-toolbar class="md-theme-light">
         <h1 class="md-toolbar-tools">Modules</h1>
       </md-toolbar>
       <md-content class="md-padding">
-      <md-button ng-click="close()" class="md-primary">
-          Close Sidenav Right
-          </md-button>
+      <button class="btn btn--m btn--blue btn--raised" ng-click="treeInstanceDemo()" lx-ripple>Button</button>
 
-    <div class="md-padding" should-apply="ignoreModelChanges()" js-tree="mpCtrl.treeConfig" ng-model="mpCtrl.treeData" tree="treeInstance" ></div>
+    <div js-tree="treeConfig" ng-model="treeData" tree-events="ready:readyCB"  tree="treeInstance"></div>
         
+
+ <div  layout="row">
+            <div >
+        <b>Raw Data:</b> {{ treeData | json }}
+    </div>
+    </div>
       </md-content>
     </md-sidenav>
   </section>

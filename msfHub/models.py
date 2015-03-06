@@ -60,18 +60,20 @@ class User(db.Model):
 
 
 class Module(db.Model):
-    __searchable__ = ['name', 'desc', 'authors', 'category', 'type']
+    __searchable__ = ['name', 'desc', 'authors','target','platform','type', 'refs']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
     desc = db.Column(db.String(1000))
     opts = db.Column(db.String(250))
     reqopts = db.Column(db.String(250))
     authors = db.Column(db.String(50))
-    category = db.Column(db.String(40))
+    refs = db.Column(db.String(100))
+    target = db.Column(db.String(40))
+    platform = db.Column(db.String(40))
     type = db.Column(db.String(30))
 
     def __repr__(self):
-        return '<Module: Type: {} Category: {}  Name: {}  >'.format(self.type , self.category, self.name)
+        return '<Module: Type: {}, Platform: {}, Target: {},  Name: {}  >'.format(self.type , self.platform, self.target, self.name)
 
 
 

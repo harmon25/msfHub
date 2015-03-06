@@ -75,15 +75,22 @@ def main():
 			for mod in modList:
 				modSplit = mod.split('/')
 				modName = modSplit[-1]
-				modCat = ('/').join(modSplit[:-1])
+				modTarget = ''
+				if modSplit[1]:
+					modTarget = modSplit[1]
 
+				if modTarget == modName:
+					modTarget = ''
+
+				modPlat = modSplit[0]
 				useMod = client.modules.use(type, mod)
 				modDesc = useMod.description
 				modAuths = useMod.authors
 				modOpts = useMod.options
 				modReqOpts = useMod.required
+				modRefs= useMod.references
 
-				m = Module(name=modName,desc=modDesc,opts=str(modOpts),reqopts=str(modReqOpts),authors=str(modAuths), category=modCat,type=type)
+				m = Module(name=modName,desc=modDesc,opts=str(modOpts),reqopts=str(modReqOpts),authors=str(modAuths), platform=modPlat,refs=str(modRefs), target=modTarget, type=type)
 				db.session.add(m)
 
 		db.session.commit()
