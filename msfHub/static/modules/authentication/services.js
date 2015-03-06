@@ -31,7 +31,11 @@ var AuthService = {
 
     isAuthenticated: function () {
       //yea if you have a token you are authenticated...doesnt mean your requests will work though
-      return !SessionFactory.session.UserToken == null;
+      var authenticated = false;
+      if ( $rootScope.currentUser.UserToken != null){
+         authenticated = true;
+          } 
+      return authenticated;
     },
  
     isAuthorized: function (authorizedRoles, userRoles) {

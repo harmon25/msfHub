@@ -3,3 +3,4 @@ itsdangerous
 flask-sqlalchemy
 passlib
 Flask-JWT
+flask-whooshalchemy

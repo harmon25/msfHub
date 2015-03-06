@@ -17,36 +17,54 @@ def getVersion():
 	client = MsfRpcClient(msfPass)
 	return client.core.version
 	
-def getExploits():
+def getExploitList():
 	client = MsfRpcClient(msfPass)
 	exploitList = client.modules.exploits
-	exploitsObj = []
+	exploitsListObj = []
 	for exploit in exploitList:
-		exploitDetails = client.modules.use('exploit', exploit)
-		exploitDesc = exploitDetails.description
-		exploitOpts = exploitDetails.options
-		exploitsObj.append({'name':exploit, 'desc':exploitDesc, 'opts':exploitOpts})
-	return exploitsObj
+		exploitsListObj.append({'name':exploit})
+	return exploitsListObj
 	
-def getAuxiliary():
+def getAuxiliaryList():
 	client = MsfRpcClient(msfPass)
-	return client.modules.auxiliary
+	auxiliaryList = client.modules.auxiliary
+	auxiliaryListObj = []
+	for module in auxiliaryList:
+		auxiliaryListObj.append({'name':module})
+	return auxiliaryListObj
 	
-def getEncoders():
+def getEncodersList():
 	client = MsfRpcClient(msfPass)
-	return client.modules.encoders
+	encoderList = client.modules.encoders
+	encoderListObj = []
+	for encoder in encoderList:
+		encoderListObj.append({'name':encoder})
+	return encoderListObj
 
-def getNops():
-	client = MsfRpcClient(msfPass)
-	return client.modules.nops
 
-def getPayloads():
+def getNopsList():
 	client = MsfRpcClient(msfPass)
-	return client.modules.payloads
+	nopsList = client.modules.nops
+	nopsListObj = []
+	for nop in nopsList:
+		encoderListObj.append({'name':nop})
+	return nopsListObj
 
-def getPost():
+def getPayloadsList():
 	client = MsfRpcClient(msfPass)
-	return client.modules.post
+	payloadList = client.modules.nops
+	payloadListObj = []
+	for payload in payloadList:
+		payloadListObj.append({'name':payload})
+	return payloadListObj
+
+def getPostList():
+	client = MsfRpcClient(msfPass)
+	postList = client.modules.post
+	postListObj = []
+	for post in postList:
+		postListObj.append({'name':post})
+	return postListObj
 
 
 

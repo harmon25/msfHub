@@ -2,8 +2,9 @@
 import os
 import argparse
 import json
+from metasploit.msfrpc import MsfRpcClient
 
-from msfHub.models import db, User, Role
+from msfHub.models import db, User, Role, Module
 
 def create_db():
 	db.create_all()
@@ -50,8 +51,45 @@ def main():
 
 		db.session.commit()
 		
-		db.session.close()
 		print "\nUser and Role data added to database!"
+
+
+		modTypes = ['exploit', 'auxiliary', 'post', 'payload']
+		msfPass = 'msfpass'
+		client = MsfRpcClient(msfPass)
+		print "Adding module Info, will take a couple minutes"
+		for type in modTypes:
+			if type == 'exploit':
+				client = MsfRpcClient(msfPass)
+				modList = client.modules.exploits
+			elif type == 'auxiliary':
+				client = MsfRpcClient(msfPass)
+				modList = client.modules.auxiliary
+			elif type == 'post':
+				client = MsfRpcClient(msfPass)
+				modList = client.modules.post
+			elif type == 'payload':
+				client = MsfRpcClient(msfPass)
+				modList = client.modules.payloads
+
+			for mod in modList:
+				modSplit = mod.split('/')
+				modName = modSplit[-1]
+				modCat = ('/').join(modSplit[:-1])
+
+				useMod = client.modules.use(type, mod)
+				modDesc = useMod.description
+				modAuths = useMod.authors
+				modOpts = useMod.options
+				modReqOpts = useMod.required
+
+				m = Module(name=modName,desc=modDesc,opts=str(modOpts),reqopts=str(modReqOpts),authors=str(modAuths), category=modCat,type=type)
+				db.session.add(m)
+
+		db.session.commit()
+
+		print "\nModule Info Added to DB"
+		db.session.close()
 	else:
 		raise Exception('Invalid command')
 

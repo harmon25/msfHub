@@ -3,31 +3,90 @@
 angular.module('Main')
 
 .controller('LayoutController',
-    ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS',
-    function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS) {
+    ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS', '$mdSidenav', '$log',
+    function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS, $mdSidenav, $log) {
 
-    $scope.renewSession = function(credentials){AuthService.login(credentials)};
+    var layoutCtrl = this;
 
-    }])
+    layoutCtrl.renewSession = function(credentials){AuthService.login(credentials)};
+
+
+      layoutCtrl.toggleLeft = function() {
+    $mdSidenav('left').toggle()
+                        .then(function(){
+                          $log.debug("toggle RIGHT is done");
+                        });
+  };
+
+}])
+
+
+.controller('ModulePanelController',
+    ['$scope','$rootScope','$mdSidenav', '$log',
+    function ($scope, $rootScope, $mdSidenav, $log) {
+    var mpCtrl = this;
+
+
+   
+   mpCtrl.close = function() {
+    $mdSidenav('left').close()
+                        .then(function(){
+                          $log.debug("close RIGHT is done");
+                        });
+  };
+   
+
+
+    mpCtrl.treeData = [
+            { id : 'ajson1', parent : '#', text : 'Simple root node', state: { opened: false} },
+            { id : 'ajson2', parent : '#', text : 'Root node 2', state: { opened: false} },
+            { id : 'ajson3', parent : 'ajson2', text : 'Child 1', state: { opened: false} },
+            { id : 'ajson4', parent : 'ajson2', text : 'Child 2' , state: { opened: false}}
+        ];
+
+    mpCtrl.treeConfig = {
+            core : {
+                multiple : false,
+                animation: false,
+                error : function(error) {
+                    $log.error('mpCtrl: error from js tree - ' + angular.toJson(error));
+                },
+                check_callback : true,
+                worker : true
+            },
+            types : {
+                default : {
+                    icon : 'mdi mdi-folder'
+                },
+                star : {
+                    icon : 'mdi mdi-close'
+                },
+                cloud : {
+                    icon : 'mdi mdi-close'
+                }
+            },
+            version : 1,
+            plugins : ['types']
+        };
+
+
+
+
+      
+}])
 
 .controller('DashController',
-    ['$scope','$rootScope', 
-    function ($scope, $rootScope) {
+    ['$scope','$rootScope', 'ExploitFactory', '$q','LxNotificationService','$http',
+    function ($scope, $rootScope, ExploitFactory, $q, LxNotificationService, $http) {
+var exploitsList = [];
 
-
-$scope.people = [
-    { name: 'Adam',      email: 'adam@email.com',      age: 10 },
-    { name: 'Amalie',    email: 'amalie@email.com',    age: 12 },
-    { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30 },
-    { name: 'Samantha',  email: 'samantha@email.com',  age: 31 },
-    { name: 'Estefanía', email: 'estefanía@email.com', age: 16 },
-    { name: 'Natasha',   email: 'natasha@email.com',   age: 54 },
-    { name: 'Nicole',    email: 'nicole@email.com',    age: 43 },
-    { name: 'Adrian',    email: 'adrian@email.com',    age: 21 }
-];
-
-
-        
+    ExploitFactory.getExploits();
+    console.log(ExploitFactory.data);
+    
+    $scope.exploitsList =  ExploitFactory.data
+    console.log(exploitsList)
+   
+      
 }])
 
 .controller('ReportsController',

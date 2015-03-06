@@ -12,9 +12,11 @@ angular.module('msfHub', [
     'angular-jwt',       // for client side JWT
     'ngResource',        // maybe to get resources..
     'ngMaterial',        // for material design - may use just Lumx
+    'ngAnimate',        // for material design - 
     'lumx',              // for material design
     'ngSanitize',        // for markdown
-    'btford.markdown'   // markdown directive
+    'btford.markdown',   // markdown directive
+    'ngJsTree'
 ])
 
 .constant('AUTH_EVENTS', {
@@ -60,10 +62,11 @@ angular.module('msfHub', [
     //on each state change do this stuff
     $rootScope.$on('$stateChangeStart', function (event, next) {  
     if (SessionFactory.session.UserToken != null) {
-          SessionFactory.checkTokenExpiry( $rootScope.currentUser.UserToken);
+          console.log(SessionFactory.checkTokenExpiry());
         };
         var authorizedRoles = next.data.authorizedRoles;
         var user_roles = $rootScope.currentUser.roles
+        console.log(AuthService.isAuthenticated())
         // if you are authenticated - but your token is expired - shoot a dialog
     if (AuthService.isAuthenticated() && SessionFactory.checkTokenExpiry()) {
          //sesion token has expired

@@ -60,7 +60,7 @@ return UserFactory;
 
 
 .factory('ExploitFactory',
-['$http','LxNotificationService', function userListFactory($http,LxNotificationService){
+['$http','LxNotificationService', function userListFactory($http, LxNotificationService){
 var ExploitFactory= {
 
     data: {
@@ -73,10 +73,10 @@ var ExploitFactory= {
             method: 'GET'
             };
 
-        $http(req).success(function (data) {
-            ExploitFactory.data.exploits = data;
+        $http(req).success(function (response) {
+            ExploitFactory.data.exploits = response.exploitsObj;
         }).error ( function (error) {
-            console.log(error)
+        
          });
     }
 

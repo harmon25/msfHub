@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="msfHub"  ng-controller="LayoutController" ng-cloak>  <!--intialize main angular module and primary controller -->
+<html ng-app="msfHub"  ng-controller="LayoutController as layoutCtrl" ng-cloak>  <!--intialize main angular module and primary controller -->
 
 <head>
     <meta charset="utf-8" >
@@ -10,43 +10,31 @@
     <link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
     <link rel="stylesheet" href="/static/css/msfHub.css">
     <link rel="stylesheet" href="/static/bower_components/lumx/dist/lumx.css">
+    <link rel="stylesheet" href="/static/bower_components/jstree/dist/themes/default/style.min.css">
     <link rel="stylesheet" href="/static/bower_components/mdi/materialdesignicons.css">
+
 </head>
 
 <body> <!--body start -->
 
-<header class="header">
+
 <div ng-if="currentUser.roles.indexOf('guest') == -1" >  <!--check if user is logged in and show toolbar if they are -->
-
-<div class="menubar">
-<div class="toolbar bgc-indigo-500 tc-white-1">
-
-<div class="toolbar__left mr+++">
-  <lx-dropdown>
-    <button class="btn btn--l btn--white btn--icon" lx-ripple  lx-dropdown-toggle>
-                <i class="mdi mdi-menu"></i>
-            </button>
-    <lx-dropdown-menu>
-        <ul>
-            <li ui-sref-active="active" class=""><a ui-sref="dashboard" class="dropdown-link">Dash</a></li>
-            <li ui-sref-active="active" class=""><a ui-sref="about" class="dropdown-link">About</a></li>
-            <li ui-sref-active="active" class=""><a ui-sref="reports" class="dropdown-link">Reports</a></li>
-            <li class="dropdown-divider"></li>
-            <li ui-sref-active="active" class=""><a ui-sref="hosts" class="dropdown-link">Hosts</a></li>
-            <li ui-sref-active="active" class=""><a ui-sref="services" class="dropdown-link">Services</a></li>
-        </ul>
-    </lx-dropdown-menu>
-</lx-dropdown>
-</div>
-
-<span class="toolbar__label fs-title"> msfHub</span>
-<nav class="main-nav main-nav--lap-and-up" >     
+<md-toolbar md-scroll-shrink>
+    <div class="md-toolbar-tools" layout="row">
+      <div flex="66"><h3>
+        <span>msfHub</span>
+      </h3> </div>
+    <div flex="33">
+      <nav class="main-nav main-nav--lap-and-up" >     
     <ul>
-        <li ui-sref-active="active" ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
-        <li ui-sref-active="active"><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
+        <li ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
+        <li><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
+         <li ><a href="javaScript:void(0);" ng-click="layoutCtrl.toggleLeft()" class="main-nav__link" lx-ripple="white">Browse Modules</a></li>
+
         <li><a ui-sref="login" class="main-nav__link" lx-ripple="white">Logout</a></li> 
     </ul>             
 </nav>
+
 <nav class="main-nav main-nav--palm" >     
     <lx-dropdown position="right" from-top>
         <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dropdown-toggle><i class="mdi mdi-dots-vertical"></i> </button>
@@ -60,12 +48,13 @@
         </lx-dropdown-menu>
     </lx-dropdown>
 </nav>
-  
 </div>
-</div> 
-</div> <!--toolbar ng-if end -->
-</header>
+    </div>
+  </md-toolbar>
 
+</div> <!--toolbar ng-if end -->
+
+ 
 <!--session token expiery dialog start- -->
 <lx-dialog class="dialog dialog--l" id="loginDialog">
     <div class="dialog__header">
@@ -80,7 +69,7 @@
     </div>
     <div class="dialog__content">
          <div class="p++">
-                <form name="sessionForm" ng-submit="renewSession(credentials)" role="form">    
+                <form name="sessionForm" ng-submit="layoutCtrl.renewSession(credentials)" role="form">    
                     <div class="p+">
                         <strong class="fs-headline display-block">Please Login</strong>
                         <div class="paragraph fs-body-1 mt+">       
@@ -111,6 +100,24 @@
     </div>
 </lx-dialog>
 <!--session token expiery dialog end-->
+  
+
+    
+  <section layout="column" ng-controller="ModulePanelController as mpCtrl" flex>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+      <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">Modules</h1>
+      </md-toolbar>
+      <md-content class="md-padding">
+      <md-button ng-click="close()" class="md-primary">
+          Close Sidenav Right
+          </md-button>
+
+    <div class="md-padding" should-apply="ignoreModelChanges()" js-tree="mpCtrl.treeConfig" ng-model="mpCtrl.treeData" tree="treeInstance" ></div>
+        
+      </md-content>
+    </md-sidenav>
+  </section>
 
 <md-content class="md-padding" ui-view>
 <!--main body content goes here-->
@@ -134,6 +141,9 @@
 <script src="/static/bower_components/angular-sanitize/angular-sanitize.min.js"> </script>
 <script src="/static/bower_components/showdown/compressed/Showdown.min.js"> </script>
 <script src="/static/bower_components/angular-markdown-directive/markdown.js"> </script>
+<script src="/static/bower_components/jstree/dist/jstree.js"> </script>
+<script src="/static/bower_components/ng-js-tree/dist/ngJsTree.js"> </script>
+
 <!--msfHub app -->
 <script src="/static/scripts/app.js"></script>
 <!--msfHub modules -->
