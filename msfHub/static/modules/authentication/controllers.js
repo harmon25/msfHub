@@ -5,14 +5,16 @@ angular.module('Authentication')
 .controller('LoginController',
     ['$scope', 'LxNotificationService', 'SessionFactory','AuthService',
     function ($scope, LxNotificationService, SessionFactory, AuthService) {
-    
+    var LgnCtrl = this;
+
     SessionFactory.destroySession()
     
-    $scope.credentials = {
+
+    LgnCtrl.credentials = {
                     username: '',
                     password: '' }
 
-    $scope.login = function(credentials){AuthService.login(credentials)};
+   LgnCtrl.login = function(credentials){AuthService.login(credentials)};
     
     }])
 

@@ -20,9 +20,7 @@ def authenticate(username, password):
 
 @jwt.payload_handler
 def make_payload(user):
-    roles = []
-    for r in user.roles:
-        roles.append(str(r))
+    roles = user.getRoles()
     expiry = (datetime.now() - datetime.fromtimestamp(0)) + app.config['JWT_EXPIRATION_DELTA']
     return {
         'user_id': user.id,
@@ -45,22 +43,11 @@ def error_handler(error):
     resp.headers['WWW-Authenticate'] = 'BasicCustom realm="msfHub"'
     return resp
 
-def row2dict(row):
-    d = {}
-    for column in row.__table__.columns:
-        d[column.name] = str(getattr(row, column.name))
-    return d
-
 
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def whoami():
-    if current_user:
-        user = current_user
-        print user
-        return jsonify({"username": user.username, "roles":str(user.roles)})
-    else:
-        abort(400)
+    return jsonify({"username": current_user.username, "roles":str(current_user.roles)})
 
 @app.route('/api/users', methods=['POST'])
 @jwt_required()
@@ -74,15 +61,11 @@ def new_user():
         return (jsonify({'message': "User Exists"}), 400)
     else:
         user = User(username=username, password=password)
-
         db.session.add(user)
-
         for role in roles:
             roll_to_add = Role.query.filter_by(name=role.lower()).first()
             user.roles.append(roll_to_add)
-
         db.session.commit()
-
         return (jsonify({'message': 'User ' + user.username + ' created'}), 201)
 
 @app.route('/api/users', methods=['GET'])
@@ -91,31 +74,30 @@ def get_users():
     userDict = {}
     users = User.query.order_by(User.id)
     for user in users:
-        users_roles = []
-        for r in user.roles:
-            users_roles.append(str(r))
+        users_roles = user.getRoles()
         userDict[user.id] = {"id":user.id, "username":user.username,"roles":users_roles, "workspace":user.workspace}
     return jsonify(userDict)
 
 @app.route('/api/users', methods=['DELETE'])
 @jwt_required()
 def del_user():
-    user_id = request.json.get('id')
-    if User.query.get(user_id) is not None:
-        user = User.query.get(user_id)
-        db.session.delete(user)
-        db.session.commit()
-        return (jsonify({'message': 'User Deleted'}), 201)
+    if current_user.isAllowed(['admin']):
+        user_id = request.json.get('id')
+        if User.query.get(user_id) is not None:
+            user = User.query.get(user_id)
+            db.session.delete(user)
+            db.session.commit()
+            return (jsonify({'message': 'User Deleted'}), 201)
+        else:
+            return (jsonify({'message': 'User does not Exist'}), 400)
     else:
-        return (jsonify({'message': 'User does not Exist'}), 400)
+        return (jsonify({'message': 'You are not Allowed to do that'}), 400)
 
 
 @app.route('/api/users/<int:id>')
 def get_user(id):
     user = User.query.get(id)
-    roles = []
-    for r in user.roles:
-        roles.append(str(r))
+    roles = user.getRoles()
     if not user:
         abort(400)
     return jsonify({'username': user.username, 'roles': roles, 'workspace': user.workspace})

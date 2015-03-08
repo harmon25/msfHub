@@ -3,8 +3,8 @@
 angular.module('Main')
 
 .controller('LayoutController',
-    ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS', '$mdSidenav', '$log',
-    function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS, $mdSidenav, $log) {
+    ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS', '$mdSidenav', '$log','ModuleFactory','LxNotificationService',
+    function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS, $mdSidenav, $log, ModuleFactory,LxNotificationService) {
 
     var layoutCtrl = this;
 
@@ -17,6 +17,55 @@ angular.module('Main')
                           $log.debug("toggle RIGHT is done");
                         });
   };
+
+
+  layoutCtrl.searchAll = {
+    selected: "",
+    loading: false, 
+    results: [],
+    query: function(newQuery){
+        if (newQuery){
+            layoutCtrl.loading = true;
+            ModuleFactory.searchMods(newQuery);
+            layoutCtrl.searchAll.results = ModuleFactory.data.results
+        } else {
+            layoutCtrl.reults = false;
+        }
+    },
+    toModel: function(data, callback)
+    {
+        if (data)
+        {
+            callback(data.name);
+        }
+        else
+        {
+            callback();
+        }
+    },
+    toSelection: function(data, callback)
+        {
+        if (data)
+        {
+            ModuleFactory.searchMods(data);
+            callback(ModuleFactory.results[0])
+        }
+        else
+        {
+            callback();
+        }
+    }
+  };
+
+layoutCtrl.cbSelect = {
+    exex: function(newVal, OldVal){
+        LxNotificationService.notify('Change detected!');
+        console.log('oldVal: ', oldVal);
+        console.log('newVal: ', newVal);
+    }
+    };
+
+
 
 }])
 
@@ -81,24 +130,30 @@ angular.module('Main')
 }])
 
 .controller('DashController',
-    ['$scope','$rootScope', 'ExploitFactory', '$q','LxNotificationService','$http',
-    function ($scope, $rootScope, ExploitFactory, $q, LxNotificationService, $http) {
-var exploitsList = [];
+    ['$scope','$rootScope', 'ModuleFactory', '$q','LxNotificationService','$http',
+    function ($scope, $rootScope, ModuleFactory, $q, LxNotificationService, $http) {
+var DashCtrl = this;
 
-    ExploitFactory.getExploits();
-    console.log(ExploitFactory.data);
-    
-    $scope.exploitsList =  ExploitFactory.data
-    console.log(exploitsList)
-   
+DashCtrl.modules = querySearch();
+DashCtrl.selectedItem  = null;
+DashCtrl.searchText    = null;
+DashCtrl.querySearch = querySearch;
+
+function querySearch (query) {
+    ModuleFactory.searchMods(query);
+    var results = ModuleFactory.data.results
+    console.log(results)
+      return results;
+    }  
       
 }])
 
 .controller('ReportsController',
     ['$scope','$rootScope','LxDialogService', 
     function ($scope, $rootScope, LxDialogService) {
-
-    $scope.viewReport = function(dialogId)
+    var RprtsCtrl = this;
+    
+    RprtsCtrl.viewReport = function(dialogId)
     {
     LxDialogService.open(dialogId);
     };

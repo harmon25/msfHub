@@ -23,13 +23,13 @@ def view_login():
 @app.route('/views/dash',methods=['GET'])
 @jwt_required()
 def view_dash():
-	print current_user
+	print current_user.username
 	return make_response(open('msfHub/templates/views/dash.html').read())
 
 @app.route('/views/hosts',methods=['GET'])
 @jwt_required()
 def view_hosts():
-	print current_user
+	print current_user.name
 	return make_response(open('msfHub/templates/views/hosts.html').read())
 
 @app.route('/views/services',methods=['GET'])

@@ -25,7 +25,7 @@ var AuthService = {
        $http.defaults.headers.common['Authorization'] = 'Bearer ' + newToken; // jshint ignore:line
        $state.go('dashboard');
       }).error( function (data){
-        LxNotificationService.warning(data.message);
+        LxNotificationService.warning(data);
       });
       },
 

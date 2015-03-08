@@ -9,6 +9,6 @@ DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ APP_ROOT+'/msfHub.db'
 JWT_EXPIRATION_DELTA = timedelta(seconds=3000)
 WHOOSH_BASE = os.path.join(APP_ROOT, '../msfHubWhoosh.db')
-MAX_SEARCH_RESULTS = 50
+MAX_SEARCH_RESULTS = 40
 MSF_MODULE_BASE = '/opt/metasploit-framework/modules'
 MSF_PASS = 'msfPass'

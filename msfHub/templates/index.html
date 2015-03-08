@@ -3,59 +3,56 @@
 
 <head>
     <meta charset="utf-8" >
+    <base href="/" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title> {{state.current.data.title}} </title> <!--get current state from state Data -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="shortcut icon" href="/static/img/favicon.ico">
     <link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
-    <link rel="stylesheet" href="/static/css/msfHub.css">
     <link rel="stylesheet" href="/static/bower_components/lumx/dist/lumx.css">
     <link rel="stylesheet" href="/static/bower_components/jstree/dist/themes/default/style.min.css">
-    <link rel="stylesheet" href="/static/bower_components/mdi/materialdesignicons.css">
+    <link rel="stylesheet" href="/static/bower_components/angular-ui-router-anim-in-out/css/anim-in-out.css">
+    <link rel="stylesheet" href="/static/bower_components/mdi//css/materialdesignicons.css">
+    <link rel="stylesheet" href="/static/css/msfHub.css">
+
+
+
+
 
 </head>
 
-<body> <!--body start -->
+<body > <!--body start -->
 
 
-<div ng-if="currentUser.roles.indexOf('guest') == -1" >  <!--check if user is logged in and show toolbar if they are -->
-<md-toolbar md-scroll-shrink>
-    <div class="md-toolbar-tools" layout="row">
-      <div flex="66"><h3>
-        <span>msfHub</span>
-      </h3> </div>
-    <div flex="33">
-      <nav class="main-nav main-nav--lap-and-up" >     
-    <ul>
-        <li ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users"  class="main-nav__link" lx-ripple="white">Edit Users</a></li>
-        <li><a ui-sref="profile" class="main-nav__link" lx-ripple="white">Profile</a></li>
-         <li ><a href="javaScript:void(0);" ng-click="layoutCtrl.toggleLeft()" class="main-nav__link" lx-ripple="white">Browse Modules</a></li>
+<md-content ng-if="currentUser.roles.indexOf('guest') == -1"> <!--check if user is logged in and show toolbar if they are -->
+<md-toolbar layout="row" layout-align="space-between center" md-scroll-shrink>
+   <h2 class="md-toolbar-tools" flex="33"> <a href="javaScript:void(0);" ui-sref="dashboard" lx-ripple="white"> <span> msfHub </span> </a> </h2>
 
-        <li><a ui-sref="login" class="main-nav__link" lx-ripple="white">Logout</a></li> 
-    </ul>             
-</nav>
+    <div class="md-toolbar-tools" layout-align="end center" flex>        
+            <lx-dropdown position="right" from-top>
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dropdown-toggle>
+                    <i class="mdi mdi-dots-vertical"></i>
+                </button>
 
-<nav class="main-nav main-nav--palm" >     
-    <lx-dropdown position="right" from-top>
-        <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dropdown-toggle><i class="mdi mdi-dots-vertical"></i> </button>
-        <lx-dropdown-menu>
-            <ul>
-                <li ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users" class="dropdown-link">Edit Users</a></li>
-                <li><a class="dropdown-link">Profile </a></li>
-                <li class="dropdown-divider"></li>
-                <li><a href="#/login" class="dropdown-link">Logout</a></li>
-            </ul>
-        </lx-dropdown-menu>
-    </lx-dropdown>
-</nav>
-</div>
-    </div>
+                <lx-dropdown-menu>
+                    <ul>
+                        <li ng-if="currentUser.roles.indexOf('admin') != -1"> <a ui-sref="admin.users" class="dropdown-link">Edit Users</a></li>
+                       <li><a  ui-sref="profile"  class="dropdown-link">Profile </a></li>
+                        <li><a a href="javaScript:void(0);" ng-click="layoutCtrl.toggleLeft()"class="dropdown-link">Modules</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a class="dropdown-link dropdown-link--is-header">Header</a></li>
+                        <li><a ui-sref="reports" class="dropdown-link">Reports</a></li>
+                    </ul>
+                </lx-dropdown-menu>
+            </lx-dropdown>
+        </div>
+   
   </md-toolbar>
+  </md-content> <!--toolbar ng-if end -->
 
-</div> <!--toolbar ng-if end -->
 
- 
-<!--session token expiery dialog start- -->
+ <section>
+<!--session token expiry dialog start- -->
 <lx-dialog class="dialog dialog--l" id="loginDialog">
     <div class="dialog__header">
         <div class="toolbar bgc-red-300 pl++">
@@ -95,14 +92,14 @@
                             <button class="btn btn--m btn--green btn--raised" type="submit" ng-disabled="sessionForm.$invalid" lx-ripple lx-dialog-close>Login</button>
                         </div>
                 </form>
-     
         </div>       
     </div>
 </lx-dialog>
-<!--session token expiery dialog end-->
-  
+<!--session token expiry dialog end--> 
+</section>
 
-    
+
+<!--side panel--> 
   <section layout="column" ng-controller="ModulePanelController" flex>
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
       <md-toolbar class="md-theme-light">
@@ -122,10 +119,26 @@
       </md-content>
     </md-sidenav>
   </section>
+<!--side panel end --> 
 
-<md-content class="md-padding" ui-view>
+
+
+<section>
+<div class="anim-in-out anim-fade" data-anim-speed="500"  ui-view>
 <!--main body content goes here-->
-</md-content>
+</div>
+</section>
+
+<section>
+ <md-toolbar style="font-size: 15px; position:absolute;bottom: 0px;padding: 10px;" layout="row" layout-align="space-between center" >
+
+<div flex="50"></div>
+<div flex><p style="text-align:right;"> Source available on <strong> <a ng-href="https://github.com/harmon25/msfHub"  style="color: rgba(255,255,255,0.87);text-decoration: none;" lx-ripple>GitHub</a> </strong></p></div>
+
+
+ </md-toolbar>
+
+</section>
 
 <!--library dependencies-->
 <script src="/static/bower_components/jquery/dist/jquery.js"></script>
@@ -136,7 +149,6 @@
 <script src="/static/bower_components/lumx/dist/lumx.js"></script>
 <script src="/static/bower_components/angular-ui-router/release/angular-ui-router.min.js"> </script>
 <script src="/static/bower_components/angular-jwt/dist/angular-jwt.min.js"> </script>
-<script src="/static/bower_components/angular-cookies/angular-cookies.min.js"> </script>
 <script src="/static/bower_components/angular-local-storage/dist/angular-local-storage.min.js"> </script>
 <script src="/static/bower_components/angular-resource/angular-resource.min.js"> </script>
 <script src="/static/bower_components/angular-animate/angular-animate.min.js"> </script>
@@ -147,6 +159,7 @@
 <script src="/static/bower_components/angular-markdown-directive/markdown.js"> </script>
 <script src="/static/bower_components/jstree/dist/jstree.js"> </script>
 <script src="/static/bower_components/ng-js-tree/dist/ngJsTree.js"> </script>
+<script src="/static/bower_components/angular-ui-router-anim-in-out/anim-in-out.js"> </script>
 
 <!--msfHub app -->
 <script src="/static/scripts/app.js"></script>

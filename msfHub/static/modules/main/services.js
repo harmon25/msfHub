@@ -58,28 +58,30 @@ var UserFactory = {
 return UserFactory;
 }])
 
-
-.factory('ExploitFactory',
-['$http','LxNotificationService', function userListFactory($http, LxNotificationService){
-var ExploitFactory= {
+.factory('ModuleFactory',
+['$http', function userListFactory($http){
+var ModuleFactory = {
 
     data: {
-        exploits: []
+        results: [],
+        error: null
     },
 
-    getExploits : function(){
+    searchMods : function(query){
         var req = {
-            url: '/api/exploits',
+            url: '/msfapi/search/' + query,
             method: 'GET'
             };
 
         $http(req).success(function (response) {
-            ExploitFactory.data.exploits = response.exploitsObj;
+            console.log(response)
+            ModuleFactory.data.results = response;
+            return ModuleFactory.data.results
         }).error ( function (error) {
-        
+            ModuleFactory.data.error = error.message;
          });
     }
 
 };
-return ExploitFactory;
+return ModuleFactory;
 }]);

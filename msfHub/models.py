@@ -43,6 +43,23 @@ class User(db.Model):
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
 
+    def getRoles(self):
+        rolesList = []
+        for r in self.roles:
+            rolesList.append(str(r))
+        return rolesList
+
+    def isAllowed(self,allowedRoles=['user']):
+        usersRoles = []
+        allowed = False
+        for r in self.roles:
+            usersRoles.append(str(r))
+        for role in usersRoles:
+            if role in allowedRoles:
+                allowed = True
+        return allowed
+            
+
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
@@ -74,8 +91,6 @@ class Module(db.Model):
 
     def __repr__(self):
         return '<Module: Type: {}, Platform: {}, Target: {},  Name: {}  >'.format(self.type , self.platform, self.target, self.name)
-
-
 
 
 

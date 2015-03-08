@@ -1,77 +1,34 @@
-﻿<div flex-container="row" flex-align="center"  flex-gutter="24" >
+﻿
+<div id="globalSeach" ng-controller="DashController as DashCtrl">
+<div flex-container="row" flex-align="center" >
+<div flex-item="5">
 
-<div flex-item="3" >
- <div class="card"  >
- <div class="p+">
- <strong class="fs-headline display-block"> Enumeration</strong>
-   
-   <div class="paragraph fs-body-1 mt+"> 
-<div flex-item >
-        <lx-select ng-model="selects.Exploit" placeholder="Exploits" choices="exploitsList.exploits" min-length="7" floating-label>
-            <lx-select-selected>
-                {{ $selected.name }} 
-            </lx-select-selected>
+ 
+<md-content style="height: 500px;"  class="md-padding" layout="column">
+<md-whiteframe style="padding: 24px;" class="md-whiteframe-z1" flex>
 
-            <lx-select-choices>
-                {{ $choice.name  }}
-            </lx-select-choices>
-        </lx-select>
-    </div>
-  
-</div>
-</div>
-</div>
-</div>
 
-<div flex-item="3" >
- <div class="card"  >
- <div class="p+">
- <strong class="fs-headline display-block"> Exploits</strong>       
-   <div class="paragraph fs-body-1 mt+"> 
+  <md-autocomplete
+        md-no-cache="true"
+        md-min-length="0"
+        md-selected-item="DashCtrl.selectedItem"
+        md-search-text="DashCtrl.searchText"
+        md-items="item in DashCtrl.querySearch(DashCtrl.searchText)"
+        md-item-text="item.name + ' - ' + item.type + ' - ' + item.platform"
+        placeholder="Global search">
+      <span md-highlight-text="DashCtrl.searchText" >{{item.name}} - {{item.type}} - {{item.platform}}</span>
+    </md-autocomplete>
+ 
+
+
+ 
+</md-whiteframe>
+
+
+</md-content>
 
 
 
-
-</div>
-</div>
-</div>
-</div>
-
-
-<div flex-item="3" >
- <div class="card"  >
- <div class="p+">
- <strong class="fs-headline display-block"> Post</strong>
-  
-   <div class="paragraph fs-body-1 mt+"> 
-
-       <div flex-item>
-        <lx-select ng-model="ajax.selected" change="cbSelect.exec(newValue, oldValue)" placeholder="Lorem Ipsum"
-                   choices="ajax.list"  filter="ajax.update(newValue, oldValue)" loading="{{ ajax.loading }}"
-                   min-length="2" allow-clear="true" selection-to-model="ajax.toModel(data, callback)"
-                   model-to-selection="ajax.toSelection(data, callback)">
-            <lx-select-selected>
-                {{ $selected.Title }} ({{ $selected.Year }})
-            </lx-select-selected>
-
-            <lx-select-choices>
-                {{ $choice.Title }} - {{ $choice.Type }}
-            </lx-select-choices>
-        </lx-select>
-
-        <button class="btn btn--m btn--blue btn--raised mt" ng-click="ajax.selected = 'Inception'" lx-ripple>Set to 'Inception'</button>
-    </div>
-
-
-
-
-    </div>
-
-</div>
-</div>
-</div>
-</div>
-
-
-</div>
-
+  </div>
+  </div>
+  </div>

@@ -16,7 +16,8 @@ angular.module('msfHub', [
     'lumx',              // for material design
     'ngSanitize',        // for markdown
     'btford.markdown',   // markdown directive
-    'ngJsTree'
+    'ngJsTree',
+    'anim-in-out'
 ])
 
 .constant('AUTH_EVENTS', {
@@ -91,7 +92,7 @@ angular.module('msfHub', [
 
       .state('login', {
             url:'/',
-            controller: 'LoginController',
+            controller: 'LoginController as LgnCtrl',
             templateUrl: '/views/login',
             data: {authorizedRoles: [USER_ROLES.user, USER_ROLES.guest],
                     title: 'msfHub · Login' }
@@ -99,7 +100,6 @@ angular.module('msfHub', [
 
         .state('dashboard', {
             url:'/dashboard',
-            controller: 'DashController',
             data: {authorizedRoles: [USER_ROLES.user],
                     title: 'msfHub · Dashboard'},
             templateUrl: '/views/dash'
@@ -160,8 +160,8 @@ angular.module('msfHub', [
             data: {authorizedRoles: [USER_ROLES.user],
                 title: 'msfHub · Profile'},
             templateUrl: '/views/profile'
-        })
-        
+        });
+
 
 
 }])
