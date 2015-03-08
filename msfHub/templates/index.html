@@ -42,6 +42,7 @@
                         <li class="dropdown-divider"></li>
                         <li><a class="dropdown-link dropdown-link--is-header">Header</a></li>
                         <li><a ui-sref="reports" class="dropdown-link">Reports</a></li>
+                        <li><a ng-click="layoutCtrl.logout()" class="dropdown-link">Logout</a></li>
                     </ul>
                 </lx-dropdown-menu>
             </lx-dropdown>
@@ -129,7 +130,7 @@
 </div>
 </section>
 
-<section>
+<section ng-if="currentUser.roles.indexOf('guest') == -1">
  <md-toolbar style="font-size: 15px; position:absolute;bottom: 0px;padding: 10px;" layout="row" layout-align="space-between center" >
 
 <div flex="50"></div>

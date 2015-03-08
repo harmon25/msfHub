@@ -36,10 +36,12 @@ def msfSearch(query):
 @jwt_required()
 def msfCategorySearch(type,category):
 	if current_user.isAllowed(['user']):
-	if not type in typeList:
-		return (jsonify({'message':"Invalid Module Type"}), 401)
+		if not type in typeList:
+			return (jsonify({'message':"Invalid Module Type"}), 401)
+		else:
+			q = Module.query.whoosh_search(category,fields=('category',)).filter_by(type=type).distinct()
 	else:
-		q = Module.query.whoosh_search(category,fields=('category',)).filter_by(type=type).distinct()
+		return (jsonify({'message': 'You are not Allowed to do that'}), 400)
 
 @app.route('/api/<info>', methods=['GET'])
 @jwt_required()

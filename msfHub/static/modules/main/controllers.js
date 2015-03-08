@@ -3,10 +3,15 @@
 angular.module('Main')
 
 .controller('LayoutController',
-    ['$scope','$rootScope','USER_ROLES','LxDialogService','$timeout','AuthService', 'AUTH_EVENTS', '$mdSidenav', '$log','ModuleFactory','LxNotificationService',
-    function ($scope, $rootScope, USER_ROLES, LxDialogService, $timeout, AuthService, AUTH_EVENTS, $mdSidenav, $log, ModuleFactory,LxNotificationService) {
+    ['$scope','$rootScope','USER_ROLES','LxDialogService','AuthService', 'AUTH_EVENTS', '$mdSidenav', '$log','ModuleFactory','LxNotificationService','SessionFactory','$state',
+    function ($scope, $rootScope, USER_ROLES, LxDialogService, AuthService, AUTH_EVENTS, $mdSidenav, $log, ModuleFactory,LxNotificationService, SessionFactory, $state) {
 
     var layoutCtrl = this;
+
+    layoutCtrl.logout = function logout () {
+        SessionFactory.destroySession();
+        $state.go('login');
+        }
 
     layoutCtrl.renewSession = function(credentials){AuthService.login(credentials)};
 
