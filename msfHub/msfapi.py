@@ -18,7 +18,7 @@ for root_dir in mod_root_dirs:
 @app.route('/msfapi/search/<query>', methods=['GET'])
 def msfSearch(query):
 	respObj = []
-	q = Module.query.whoosh_search(query,MAX_SEARCH_RESULTS,fields=('category','type','target','desc',)).all()
+	q = Module.query.whoosh_search(query,MAX_SEARCH_RESULTS,fields=('category','type','target','desc','name',)).all()
 	for mod in q:
 		respObj.append({"id":mod.id, "type":mod.type,"platform":mod.platform,"target":mod.target, "name":mod.name})
 	return (json.dumps(respObj), 201)
