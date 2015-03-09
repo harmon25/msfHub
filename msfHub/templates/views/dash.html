@@ -20,6 +20,20 @@
     </md-autocomplete>
  
 
+<lx-select ng-model="DashCtrl.searchAll.selected" change="DashCtrl.cbSelect.exec(newValue, oldValue)" placeholder="Lorem Ipsum"
+                   choices="DashCtrl.searchAll.results"  filter="DashCtrl.searchAll.query(newValue, oldValue)" loading="{{ DashCtrl.searchAll.loading }}"
+                   min-length="2" allow-clear="true" selection-to-model="DashCtrl.searchAll.toModel(data, callback)"
+                   model-to-selection="DashCtrl.searchAll.toSelection(data, callback)">
+            <lx-select-selected>
+                {{ $selected.name}} ({{ $selected.platform }})
+            </lx-select-selected>
+
+            <lx-select-choices>
+                {{ $choice.name}} - {{ $choice.type }}
+            </lx-select-choices>
+</lx-select>
+
+
 
  
 </md-whiteframe>

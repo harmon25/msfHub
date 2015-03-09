@@ -52,7 +52,6 @@
   </md-content> <!--toolbar ng-if end -->
 
 
- <section>
 <!--session token expiry dialog start- -->
 <lx-dialog class="dialog dialog--l" id="loginDialog">
     <div class="dialog__header">
@@ -97,7 +96,6 @@
     </div>
 </lx-dialog>
 <!--session token expiry dialog end--> 
-</section>
 
 
 <!--side panel--> 
@@ -110,13 +108,9 @@
       <button class="btn btn--m btn--blue btn--raised" ng-click="treeInstanceDemo()" lx-ripple>Button</button>
 
     <div js-tree="treeConfig" ng-model="treeData" tree-events="ready:readyCB"  tree="treeInstance"></div>
-        
+       
 
- <div  layout="row">
-            <div >
-        <b>Raw Data:</b> {{ treeData | json }}
-    </div>
-    </div>
+
       </md-content>
     </md-sidenav>
   </section>

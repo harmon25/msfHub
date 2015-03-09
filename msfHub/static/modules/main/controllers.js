@@ -24,17 +24,126 @@ angular.module('Main')
   };
 
 
-  layoutCtrl.searchAll = {
+  
+
+
+
+}])
+
+
+.controller('ModulePanelController',
+    ['$scope','$rootScope','$mdSidenav', '$log','LxNotificationService',
+    function ($scope, $rootScope, $mdSidenav, $log, LxNotificationService) {
+
+   
+   $scope.close = function() {
+    $mdSidenav('left').close()
+                        .then(function(){
+                          $log.debug("close RIGHT is done");
+                        });
+  };
+   
+    $scope.readyCB = function() {
+        console.log($scope.treeInstance.jstree());
+        $log.info('ready called');
+        $log.log("Tree instance = " + $scope.treeInstance);  
+    };
+
+   $scope.treeData = [
+            { id : 'expTree', parent : '#', text : 'Exploits', state: { opened: false}, type: "root" },
+            { id : 'auxTree', parent : '#', text : 'Auxiliary', state: { opened: false} },
+            { id : 'postTree', parent : '#', text : 'Post', state: { opened: false} },
+            { id : 'PayloadTree', parent : '#', text : 'Payloads', state: { opened: false} },
+            { id : 'expTreechild', parent : 'expTree', text : 'Exp child', state: { opened: false} },
+             { id : 'auxTreeChild', parent : 'auxTree', text : 'Aux child', state: { opened: false} },
+              { id : 'postTreeChild', parent : 'postTree', text : 'Post Child', state: { opened: false} },
+               { id : 'PayloadTreeChild', parent : 'PayloadTree', text : 'Payloads Child', state: { opened: false} }
+                
+
+        ];
+
+    $scope.treeConfig = {
+            core : {
+                multiple : false,
+                animation: true,
+                error : function(error) {
+                    $log.error('mpCtrl: error from js tree - ' + angular.toJson(error));
+                },
+                check_callback : true,
+                worker : true
+            },
+            types : {
+                '#': {
+                     "max_depth" : 4,
+                     icon : 'mdi mdi-folder'
+                },
+                default : {
+                    icon : 'mdi mdi-folder'
+                },
+                'root' : {
+                    icon : 'mdi mdi-folder-outline'
+                },
+                cloud : {
+                    icon : 'mdi mdi-close'
+                }
+            },
+            version : 1,
+            
+            plugins : ['types', 'contextmenu'],
+
+            contextmenu: {
+                "items": function ($node){
+                    return {
+                        "Test": {
+                            "label": "Test1",
+                             "action": null
+
+                            },
+                            "Test2": {
+                                "label": "Test2",
+                                "action": null
+                            }
+                          }
+                    }
+            }
+        };
+
+ $scope.treeInstanceDemo = function() {
+            var selectedNode = $scope.treeInstance.jstree(true).get_selected();
+             LxNotificationService.warning('Selected node id is ' + selectedNode);
+         };
+      
+}])
+
+.controller('DashController',
+    ['$scope','$rootScope', 'ModuleFactory', '$q','LxNotificationService','$http',
+    function ($scope, $rootScope, ModuleFactory, $q, LxNotificationService, $http) {
+var DashCtrl = this;
+
+DashCtrl.modules = querySearch();
+DashCtrl.selectedItem  = null;
+DashCtrl.searchText    = null;
+DashCtrl.querySearch = querySearch;
+
+function querySearch (query) {
+    ModuleFactory.searchMods(query);
+    var results = ModuleFactory.data.results
+    console.log(results)
+      return results;
+    }  
+   
+
+DashCtrl.searchAll = {
     selected: "",
     loading: false, 
     results: [],
     query: function(newQuery){
         if (newQuery){
-            layoutCtrl.loading = true;
+            DashCtrl.loading = true;
             ModuleFactory.searchMods(newQuery);
-            layoutCtrl.searchAll.results = ModuleFactory.data.results
+            DashCtrl.searchAll.results = ModuleFactory.data.results
         } else {
-            layoutCtrl.reults = false;
+            DashCtrl.results = false;
         }
     },
     toModel: function(data, callback)
@@ -62,7 +171,7 @@ angular.module('Main')
     }
   };
 
-layoutCtrl.cbSelect = {
+DashCtrl.cbSelect = {
     exex: function(newVal, OldVal){
         LxNotificationService.notify('Change detected!');
         console.log('oldVal: ', oldVal);
@@ -71,86 +180,6 @@ layoutCtrl.cbSelect = {
     };
 
 
-
-}])
-
-
-.controller('ModulePanelController',
-    ['$scope','$rootScope','$mdSidenav', '$log','LxNotificationService',
-    function ($scope, $rootScope, $mdSidenav, $log, LxNotificationService) {
-
-   
-   $scope.close = function() {
-    $mdSidenav('left').close()
-                        .then(function(){
-                          $log.debug("close RIGHT is done");
-                        });
-  };
-   
-    $scope.readyCB = function() {
-        $log.info('ready called');
-        $log.log("Tree instance = " + $scope.treeInstance);  
-    };
-
-   $scope.treeData = [
-            { id : 'expTree', parent : '#', text : 'Exploits', state: { opened: false} },
-            { id : 'auxTree', parent : '#', text : 'Auxiliary', state: { opened: false} },
-            { id : 'postTree', parent : '#', text : 'Post', state: { opened: false} },
-            { id : 'PayloadTree', parent : '#', text : 'Payloads', state: { opened: false}}
-        ];
-
-    $scope.treeConfig = {
-            core : {
-                multiple : false,
-                animation: false,
-                error : function(error) {
-                    $log.error('mpCtrl: error from js tree - ' + angular.toJson(error));
-                },
-                check_callback : true,
-                worker : true
-            },
-            types : {
-                '#': {
-                     "max_depth" : 4
-                },
-                default : {
-                    icon : 'mdi mdi-folder'
-                },
-                'root' : {
-                    icon : 'mdi mdi-folder-outline'
-                },
-                cloud : {
-                    icon : 'mdi mdi-close'
-                }
-            },
-            version : 1,
-            plugins : ['types','unique']
-        };
-
- $scope.treeInstanceDemo = function() {
-            var selectedNode = $scope.treeInstance.jstree(true).get_selected();
-             LxNotificationService.warning('Selected node id is ' + selectedNode);
-         };
-      
-}])
-
-.controller('DashController',
-    ['$scope','$rootScope', 'ModuleFactory', '$q','LxNotificationService','$http',
-    function ($scope, $rootScope, ModuleFactory, $q, LxNotificationService, $http) {
-var DashCtrl = this;
-
-DashCtrl.modules = querySearch();
-DashCtrl.selectedItem  = null;
-DashCtrl.searchText    = null;
-DashCtrl.querySearch = querySearch;
-
-function querySearch (query) {
-    ModuleFactory.searchMods(query);
-    var results = ModuleFactory.data.results
-    console.log(results)
-      return results;
-    }  
-      
 }])
 
 .controller('ReportsController',

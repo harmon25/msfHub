@@ -16,17 +16,13 @@ for root_dir in mod_root_dirs:
 
 
 @app.route('/msfapi/search/<query>', methods=['GET'])
-@jwt_required()
 def msfSearch(query):
-	if current_user.isAllowed(['user']):
-		respObj = []
-		q = Module.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
-		for mod in q:
-			respObj.append({"id":mod.id, "type":mod.type,"platform":mod.platform,"target":mod.target, "name":mod.name})
-		return (json.dumps(respObj), 201)
-	else:
-		return (jsonify({'message': 'You are not Allowed to do that'}), 400)
-
+	respObj = []
+	q = Module.query.whoosh_search(query,MAX_SEARCH_RESULTS,fields=('category','type','target','desc',)).all()
+	for mod in q:
+		respObj.append({"id":mod.id, "type":mod.type,"platform":mod.platform,"target":mod.target, "name":mod.name})
+	return (json.dumps(respObj), 201)
+	
 # q = Module.query.filter_by(type=type).filter(Module.category.startswith(category)).all()
 
 #	q = Module.query.filter_by(type=type).all()
