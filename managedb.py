@@ -5,6 +5,11 @@ import json
 from metasploit.msfrpc import MsfRpcClient
 
 from msfHub.models import db, User, Role, Module
+from msfHub.config import MSF_PASS
+
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def create_db():
 	db.create_all()
@@ -55,21 +60,20 @@ def main():
 
 
 		modTypes = ['exploit', 'auxiliary', 'post', 'payload']
-		msfPass = 'msfpass'
-		client = MsfRpcClient(msfPass)
+		client = MsfRpcClient(MSF_PASS)
 		print "Adding module Info, will take a couple minutes"
 		for type in modTypes:
 			if type == 'exploit':
-				client = MsfRpcClient(msfPass)
+				client = MsfRpcClient(MSF_PASS)
 				modList = client.modules.exploits
 			elif type == 'auxiliary':
-				client = MsfRpcClient(msfPass)
+				client = MsfRpcClient(MSF_PASS)
 				modList = client.modules.auxiliary
 			elif type == 'post':
-				client = MsfRpcClient(msfPass)
+				client = MsfRpcClient(MSF_PASS)
 				modList = client.modules.post
 			elif type == 'payload':
-				client = MsfRpcClient(msfPass)
+				client = MsfRpcClient(MSF_PASS)
 				modList = client.modules.payloads
 
 			for mod in modList:
